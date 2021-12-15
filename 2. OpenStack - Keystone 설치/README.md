@@ -47,7 +47,7 @@ su -s /bin/sh -c "keystone-manage db_sync" keystone
 ```
 keystone-manage fernet_setup --keystone-user keystone --keystone-group keystone
 ```
-#### 확인
+#### (4-1) 확인
 ```
 ls -l /etc/keystone/fernet-keys/
 ```
@@ -56,7 +56,7 @@ ls -l /etc/keystone/fernet-keys/
 ```
 keystone-manage credential_setup --keystone-user keystone --keystone-group keystone
 ```
-#### 확인
+#### (5-1) 확인
 ```
 ls -l /etc/keystone/credential-keys
 ```
