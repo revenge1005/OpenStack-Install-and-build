@@ -82,7 +82,7 @@ chronyc sources
 
 #### - OpenStack Rockey 버전을 사용하기 위해 패키지 설치가 필요하다.
 
-#### https://docs.openstack.org/install-guide/environment-packages-ubuntu.html
+#### - https://docs.openstack.org/install-guide/environment-packages-ubuntu.html
 
 #### (1) OpenStack Victoria for Ubuntu 20.04 LTS:
 ```
@@ -139,7 +139,7 @@ mysql_secure_installation
 
 #### - 서비스 간 상호작용에 사용될 메시지 큐를 컨트롤러 노드에 구성해야 한다.
 
-#### https://docs.openstack.org/install-guide/environment-messaging-ubuntu.html
+#### - https://docs.openstack.org/install-guide/environment-messaging-ubuntu.html
 
 #### (1) Install the package:
 ```
@@ -166,7 +166,7 @@ systemctl enable rabbitmq-server
 
 #### - Identiry 서비스 인증에서 토큰을 캐싱하기 위해 컨트롤러 노드에 구성한다.
 
-#### https://docs.openstack.org/install-guide/environment-memcached-ubuntu.html
+#### - https://docs.openstack.org/install-guide/environment-memcached-ubuntu.html
 
 #### (1) For Ubuntu versions prior to 20.04 use:
 ```
