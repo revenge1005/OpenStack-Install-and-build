@@ -1,5 +1,5 @@
 
-# 1-1. (모든 노드 해당) - 각 노드의 호스트 정보를 /etc/hosts에 작성
+## 1-1. (모든 노드 해당) - 각 노드의 호스트 정보를 /etc/hosts에 작성
 
 ```
 cat <<EOF >>/etc/hosts
@@ -11,14 +11,14 @@ cat <<EOF >>/etc/hosts
 EOF
 ```
 
-# 1-2. (모든 노드 해당) 방화벽 비활성화
+## 1-2. (모든 노드 해당) 방화벽 비활성화
 
 ```
 ufw disable
 ufw status
 ```
 
-# 2-1. (Controller Node) - NTP 설치
+## 2-1. (Controller Node) - NTP 설치
 
 #### - OpenStack은 여러 노드로 구성되고 각각의 노드는 기본적으로 단말기를 분리하여 구성하는 것을 추천한다. 
 
@@ -53,7 +53,7 @@ systemctl enable chrony
 chronyc sources
 ```
 
-# 2-2. (Compute, Network Node) - NTP 설치
+## 2-2. (Compute, Network Node) - NTP 설치
 
 ```
 apt-get install chrony -y
@@ -78,7 +78,7 @@ systemctl enable chrony
 chronyc sources
 ```
 
-# 3-1. (모든 노드 해당) - OpenStack 패키지 설치
+## 3-1. (모든 노드 해당) - OpenStack 패키지 설치
 
 #### - OpenStack Rockey 버전을 사용하기 위해 패키지 설치가 필요하다.
 
@@ -100,7 +100,7 @@ apt upgrade -y
 apt install python3-openstackclient -y
 ```
 
-# 4-1. (Controller Node) - SQL Databases 설정
+## 4-1. (Controller Node) - SQL Databases 설정
 
 #### - 서비스들의 정보 저장을 위해 데이터베이스를 컨트롤러에 구성해야 한다.
 
@@ -135,7 +135,7 @@ systemctl enable mysql
 mysql_secure_installation
 ```
 
-# 5-1. (Controller Node) - RebbitMQ (메시지 큐) 설정
+## 5-1. (Controller Node) - RebbitMQ (메시지 큐) 설정
 
 #### - 서비스 간 상호작용에 사용될 메시지 큐를 컨트롤러 노드에 구성해야 한다.
 
@@ -162,7 +162,7 @@ systemctl restart rabbitmq-server
 systemctl enable rabbitmq-server
 ```
 
-# 6-1 (Controller Node) - Memcached 설정
+## 6-1 (Controller Node) - Memcached 설정
 
 #### - Identiry 서비스 인증에서 토큰을 캐싱하기 위해 컨트롤러 노드에 구성한다.
 
