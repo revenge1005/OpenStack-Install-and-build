@@ -49,7 +49,7 @@ apt install glance -y
 
 #### (2) 설정 - 1
 ```
-/etc/glance/glance-api.conf 
+vim /etc/glance/glance-api.conf 
 
 ### 데이터베이스 액세스 구성
 [database]
