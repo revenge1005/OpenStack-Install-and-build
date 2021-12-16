@@ -145,3 +145,28 @@ systemctl enable glance-api.service
 ```
 ls -l /var/log/glance
 ```
+
+## 1-4. Glance 서비스 테스트
+
+#### (1) Cirros의 이미지를 다운
+```
+wget http://download.cirros-cloud.net/0.3.5/cirros-0.3.5-x86_64-disk.img
+```
+
+#### (2) Cirros 이미지를 Glance 서비스에 업로드하기
+```
+openstack image create "cirros" \
+--file cirros-0.3.5-x86_64-disk.img \
+--disk-format qcow2 --container-format bare \
+--public
+```
+
+#### (3) 확인, 생성된 이미지를 확인하고 그 상태가 현재 사용 가능한 Active로 돼 있는 것을 알 수 있다.
+```
+openstack image list
+```
+
+#### (4) 생성된 이미지가 로컬 시스템에 저장된 것을 확인
+```
+ ls -l /var/lib/glance/images
+```
