@@ -80,7 +80,7 @@ chronyc sources
 
 ## 3-1. (모든 노드 해당) - OpenStack 패키지 설치
 
-#### - OpenStack Rockey 버전을 사용하기 위해 패키지 설치가 필요하다.
+#### - OpenStack victoria 버전을 사용하기 위해 패키지 설치가 필요하다.
 
 #### - https://docs.openstack.org/install-guide/environment-packages-ubuntu.html
 
