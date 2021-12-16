@@ -39,3 +39,101 @@ openstack service list
 
 openstack endpoint list
 ```
+
+## 1-3. Glance 패키지 설치
+
+#### (1) 설치
+```
+apt install glance
+```
+
+#### (2) 설정 - 1
+```
+/etc/glance/glance-api.conf 
+
+### 데이터베이스 액세스 구성
+[database]
+# ...
+connection = mysql+pymysql://glance:GLANCE_DBPASS@controller/glance
+
+### 인즌 서비스 액세스 구성
+[keystone_authtoken]
+# ...
+www_authenticate_uri = http://controller:5000
+auth_url = http://controller:5000
+memcached_servers = controller:11211
+auth_type = password
+project_domain_name = Default
+user_domain_name = Default
+project_name = service
+username = glance
+password = GLANCE_PASS
+
+### 인증 서비스 액세스 구성
+[paste_deploy]
+# ...
+flavor = keystone
+
+### 파일 시스템 저장소, 이미지 파일 위치 구성
+[glance_store]
+# ...
+stores = file,http
+default_store = file
+filesystem_store_datadir = /var/lib/glance/images/
+```
+
+#### (2) 설정 - 2
+```
+mv /etc/glance/glance-registry.conf /etc/glance/glance-registry.conf.bak
+
+vim /etc/glance/glance-registry.conf 
+
+### 데이버베이스 액세스 구성 
+[database] 
+connection = mysql+pymysql://glance:GLANCE_DBPASS@controller/glance
+
+### 인증 서비스 액세스 구성
+[keystone_authtoken] 
+www_authenticate_uri = http://controller:5000 
+auth_url = http://controller:5000 
+memcached_servers = controller:11211 
+auth_type = password 
+project_domain_name = Default 
+user_domain_name = Default 
+project_name = service 
+username = glance 
+password = GLANCE_PASS
+
+### 인증 서비스 액세스 구성
+[paste_deploy]  
+flavor = keystone
+```
+
+```
+chmod 644 /etc/glance/glance-api.conf
+
+chown glance.glance /etc/glance/glance-api.conf
+```
+
+
+#### (3) glance-manage db_sync [DB이름] 명령을 통해 image service 데이터베이스 초기 구성
+```
+su -s /bin/sh -c "glance-manage db_sync" glance
+```
+
+#### (3-1) 결과 확인
+```
+mysql -u root -p glance
+```
+
+#### (4) 서비스 restart/enable
+```
+systemctl enable openstack-glance-api.service \ openstack-glance-registry.service
+
+systemctl restart openstack-glance-api.service \ openstack-glance-registry.service
+```
+
+#### (5) Glance 서비스 로그 위치 확인
+```
+ls -l /var/log/glance
+```
