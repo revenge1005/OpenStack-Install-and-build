@@ -136,9 +136,9 @@ show tables;
 
 #### (4) 서비스 restart/enable
 ```
-systemctl enable openstack-glance-api.service \ openstack-glance-registry.service
+systemctl restart glance-api.service
 
-systemctl restart openstack-glance-api.service \ openstack-glance-registry.service
+systemctl enable glance-api.service
 ```
 
 #### (5) Glance 서비스 로그 위치 확인
