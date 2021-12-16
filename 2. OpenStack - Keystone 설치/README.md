@@ -114,3 +114,14 @@ openstack token issue
 ```
 openstack project create --domain default --description "Service Project" service
 ```
+
+#### (5) 결과 확인
+```
+openstack project list
+
+openstack domain list
+
+openstack role list
+
+openstack endpoint list
+```
