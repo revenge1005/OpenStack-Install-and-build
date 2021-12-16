@@ -54,13 +54,13 @@ openstack user create --domain default --project service --password PLACEMENT_DB
 
 openstack role add --project service --user placement admin
 
-openstack service create --name nova --description "OpenStack Compute service" compute
+openstack service create --name placement --description "Compute Placement API" placement
 
-openstack endpoint create --region RegionOne placement public http://$controller:8778
+openstack endpoint create --region RegionOne placement public http://controller:8778
 
-openstack endpoint create --region RegionOne placement internal http://$controller:8778
+openstack endpoint create --region RegionOne placement internal http://controller:8778
 
-openstack endpoint create --region RegionOne placement admin http://$controller:8778
+openstack endpoint create --region RegionOne placement admin http://controller:8778
 ```
 
 #### (2) 확인
