@@ -81,6 +81,11 @@ stores = file,http
 default_store = file
 filesystem_store_datadir = /var/lib/glance/images/
 ```
+```
+chmod 644 /etc/glance/glance-api.conf
+
+chown glance.glance /etc/glance/glance-api.conf
+```
 
 #### (2) 설정 - 2
 ```
@@ -108,13 +113,11 @@ password = GLANCE_PASS
 [paste_deploy]  
 flavor = keystone
 ```
-
 ```
-chmod 644 /etc/glance/glance-api.conf
+chmod 644 /etc/glance/glance-registry.conf 
 
-chown glance.glance /etc/glance/glance-api.conf
+chown glance.glance /etc/glance/glance-registry.conf 
 ```
-
 
 #### (3) glance-manage db_sync [DB이름] 명령을 통해 image service 데이터베이스 초기 구성
 ```
