@@ -72,12 +72,12 @@ OPENSTACK_NEUTRON_NETWORK = {
 
 TIME_ZONE = "Asia/Seoul"
 ```
-### (3) /etc/apache2/conf-available/openstack-dashboard.conf 파일에서 기본적으로 필요한 WSGIApplicationGroup %{GLOBAL} 구문이 빠져있다면 추가
+#### (3) /etc/apache2/conf-available/openstack-dashboard.conf 파일에서 기본적으로 필요한 WSGIApplicationGroup %{GLOBAL} 구문이 빠져있다면 추가
 ```
 WSGIApplicationGroup %{GLOBAL}
 ```
 
-#### (3) 서비스 재시작
+#### (4) 서비스 재시작
 ```
 systemctl restart apache2 memcached
 ```
