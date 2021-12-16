@@ -26,6 +26,10 @@ GRANT ALL PRIVILEGES ON nova_cell0.* TO 'nova'@'%' IDENTIFIED BY 'NOVA_DBPASS';
 grant all privileges on nova_placement.* to nova@'localhost' identified by 'NOVA_DBPASS';
 
 grant all privileges on nova_placement.* to nova@'%' identified by 'NOVA_DBPASS';
+
+flush privileges;
+
+exit
 ```
 
 ## 1-2. Controller 노드 - Nova 사용자, 서비스, EndPoint 생성
