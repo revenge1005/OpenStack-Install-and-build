@@ -23,12 +23,15 @@ exit
 
 #### (1) keystone 설치 
 ```
-apt install keystone -y
+apt -y install keystone python3-openstackclient apache2 libapache2-mod-wsgi-py3 python3-oauth2client
 ```
 
 #### (2) /etc/keystone/keystone.conf 을 통해 keystone 설정 수정
 ```bash
 vim /etc/keystone/keystone.conf
+
+# line 436: uncomment and specify Memcache Server
+memcache_servers = controller:11211
 
 [database]
 # ...

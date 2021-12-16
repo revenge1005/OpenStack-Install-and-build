@@ -8,9 +8,13 @@ mysql -u root -p
 ```
 ```
 create database glance;
+
 GRANT ALL PRIVILEGES ON glance.* TO 'glance'@'localhost' IDENTIFIED BY 'GLANCE_DBPASS';
+
 GRANT ALL PRIVILEGES ON glance.* TO 'glance'@'%' IDENTIFIED BY 'GLANCE_DBPASS';
+
 flush privileges;
+
 exit
 ```
 
@@ -18,7 +22,7 @@ exit
 
 #### (1) 생성
 ```
-openstack user create --domain default --project service --password password glance
+openstack user create --domain default --project service --password GLANCE_DBPASS glance
 
 openstack role add --project service --user glance admin
 
@@ -52,6 +56,10 @@ apt install glance -y
 cp /etc/glance/glance-api.conf /etc/glance/glance-api.conf.bak
 
 vim /etc/glance/glance-api.conf 
+
+# create new
+[DEFAULT]
+bind_host = 0.0.0.0
 
 ### 데이터베이스 액세스 구성
 [database]

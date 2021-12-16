@@ -86,6 +86,7 @@ chronyc sources
 
 #### (1) OpenStack Victoria for Ubuntu 20.04 LTS:
 ```
+apt -y install software-properties-common
 add-apt-repository cloud-archive:victoria
 ```
 
