@@ -98,9 +98,8 @@ connection = mysql+pymysql://nova:NOVA_DBPASS@controller/nova
 [DEFAULT]
 # ...
 transport_url = rabbit://openstack:RABBIT_PASS@controller:5672/
-my_ip = 192.168.219.110
+my_ip = 192.168.56.110
 use_neutron = true
-log_dir = /var/log/nova
 
 [api]
 # ...
