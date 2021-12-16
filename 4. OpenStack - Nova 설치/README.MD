@@ -216,7 +216,7 @@ openstack compute service list
 
 #### (1) 설치
 ```
-apt install qemu-kvm libvirt-daemon-system libvirt-clients virtinst bridge-utils nova-compute-kvm python-openstackclient nova-api-metadata nova-compute python3-novaclient -y
+apt install qemu-kvm libvirt-daemon-system libvirt-clients virtinst bridge-utils nova-compute-kvm python3-openstackclient nova-api-metadata nova-compute python3-novaclient -y
 ```
 
 #### (2) 설정
