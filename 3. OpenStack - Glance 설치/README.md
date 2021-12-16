@@ -44,7 +44,7 @@ openstack endpoint list
 
 #### (1) 설치
 ```
-apt install glance
+apt install glance -y
 ```
 
 #### (2) 설정 - 1
