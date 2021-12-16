@@ -130,6 +130,9 @@ su -s /bin/sh -c "glance-manage db_sync" glance
 ```
 mysql -u root -p glance
 ```
+```
+show tables;
+```
 
 #### (4) 서비스 restart/enable
 ```
