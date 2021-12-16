@@ -42,12 +42,12 @@ SESSION_ENGINE = 'django.contrib.sessions.backends.cache'
 CACHES = {
     'default': {
          'BACKEND': 'django.core.cache.backends.memcached.MemcachedCache',
-         'LOCATION': 'controller:11211',
+         'LOCATION': '192.168.56.110:11211',
     }
 }
 
 ### openstack 호스트가 controller 임을 명시
-OPENSTACK_HOST = "controller"
+OPENSTACK_HOST = "192.168.56.110"
 
 
 ### identity Service API의 URL 명시(버전 3 사용)

@@ -43,11 +43,11 @@ openstack role add --project service --user nova admin
 
 openstack service create --name nova --description "OpenStack Compute" compute
 
-openstack endpoint create --region RegionOne compute public http://controller:8774/v2.1
+openstack endpoint create --region RegionOne compute public http://192.168.56.110:8774/v2.1
 
-openstack endpoint create --region RegionOne compute internal http://controller:8774/v2.1
+openstack endpoint create --region RegionOne compute internal http://192.168.56.110:8774/v2.1
 
-openstack endpoint create --region RegionOne compute admin http://controller:8774/v2.1
+openstack endpoint create --region RegionOne compute admin http://192.168.56.110:8774/v2.1
 ```
 ```
 openstack user create --domain default --project service --password PLACEMENT_DBPASS placement
@@ -56,11 +56,11 @@ openstack role add --project service --user placement admin
 
 openstack service create --name placement --description "Compute Placement API" placement
 
-openstack endpoint create --region RegionOne placement public http://controller:8778
+openstack endpoint create --region RegionOne placement public http://192.168.56.110:8778
 
-openstack endpoint create --region RegionOne placement internal http://controller:8778
+openstack endpoint create --region RegionOne placement internal http://192.168.56.110:8778
 
-openstack endpoint create --region RegionOne placement admin http://controller:8778
+openstack endpoint create --region RegionOne placement admin http://192.168.56.110:8778
 ```
 
 #### (2) 확인
@@ -89,15 +89,15 @@ vim /etc/nova/nova.conf
 
 [api_database]
 # ...
-connection = mysql+pymysql://nova:NOVA_DBPASS@controller/nova_api
+connection = mysql+pymysql://nova:NOVA_DBPASS@192.168.56.110/nova_api
 
 [database]
 # ...
-connection = mysql+pymysql://nova:NOVA_DBPASS@controller/nova
+connection = mysql+pymysql://nova:NOVA_DBPASS@192.168.56.110/nova
 
 [DEFAULT]
 # ...
-transport_url = rabbit://openstack:RABBIT_PASS@controller:5672/
+transport_url = rabbit://openstack:RABBIT_PASS@192.168.56.110:5672/
 my_ip = 192.168.56.110
 use_neutron = true
 
@@ -107,9 +107,9 @@ auth_strategy = keystone
 
 [keystone_authtoken]
 # ...
-www_authenticate_uri = http://controller:5000/
-auth_url = http://controller:5000/
-memcached_servers = controller:11211
+www_authenticate_uri = http://192.168.56.110:5000/
+auth_url = http://192.168.56.110:5000/
+memcached_servers = 192.168.56.110:11211
 auth_type = password
 project_domain_name = Default
 user_domain_name = Default
@@ -125,7 +125,7 @@ server_proxyclient_address = $my_ip
 
 [glance]
 # ...
-api_servers = http://controller:9292
+api_servers = http://192.168.56.110:9292
 
 [oslo_concurrency]
 # ...
@@ -138,7 +138,7 @@ project_domain_name = Default
 project_name = service
 auth_type = password
 user_domain_name = Default
-auth_url = http://controller:5000/v3
+auth_url = http://192.168.56.110:5000/v3
 username = placement
 password = PLACEMENT_PASS
 
@@ -164,9 +164,9 @@ debug = false
 auth_strategy = keystone
 
 [keystone_authtoken]
-www_authenticate_uri = http://controller:5000
-auth_url = http://controller:5000
-memcached_servers = controller:11211
+www_authenticate_uri = http://192.168.56.110:5000
+auth_url = http://192.168.56.110:5000
+memcached_servers = 192.168.56.110:11211
 auth_type = password
 project_domain_name = default
 user_domain_name = default
@@ -175,7 +175,7 @@ username = placement
 password = PLACEMENT_DBPASS
 
 [placement_database]
-connection = mysql+pymysql://placement:PLACEMENT_DBPASS@controller/placement
+connection = mysql+pymysql://placement:PLACEMENT_DBPASS@192.168.56.110/placement
 ```
 ```
 chmod 640 /etc/placement/placement.conf
@@ -184,8 +184,6 @@ chgrp placement /etc/placement/placement.conf
 
 ## 1-4. 데이터베이스 테이블 생성
 ```
-su -s /bin/bash placement -c "placement-manage db sync"
-
 su -s /bin/sh -c "nova-manage api_db sync" nova
 
 su -s /bin/sh -c "nova-manage cell_v2 map_cell0" nova
@@ -227,7 +225,7 @@ vim /etc/nova/nova.conf
 
 [DEFAULT]
 # ...
-transport_url = rabbit://openstack:RABBIT_PASS@controller
+transport_url = rabbit://openstack:RABBIT_PASS@192.168.56.110
 my_ip = 192.168.56.120
 
 [api]
@@ -236,9 +234,9 @@ auth_strategy = keystone
 
 [keystone_authtoken]
 # ...
-www_authenticate_uri = http://controller:5000/
-auth_url = http://controller:5000/
-memcached_servers = controller:11211
+www_authenticate_uri = http://192.168.56.110:5000/
+auth_url = http://192.168.56.110:5000/
+memcached_servers = 192.168.56.110:11211
 auth_type = password
 project_domain_name = Default
 user_domain_name = Default
@@ -251,11 +249,11 @@ password = NOVA_PASS
 enabled = true
 server_listen = 0.0.0.0
 server_proxyclient_address = $my_ip
-novncproxy_base_url = http://controller:6080/vnc_auto.html
+novncproxy_base_url = http://192.168.56.110:6080/vnc_auto.html
 
 [glance]
 # ...
-api_servers = http://controller:9292
+api_servers = http://192.168.56.110:9292
 
 [oslo_concurrency]
 # ...
@@ -268,7 +266,7 @@ project_domain_name = Default
 project_name = service
 auth_type = password
 user_domain_name = Default
-auth_url = http://controller:5000/v3
+auth_url = http://192.168.56.110:5000/v3
 username = placement
 password = PLACEMENT_PASS
 

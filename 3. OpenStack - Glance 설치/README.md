@@ -28,11 +28,11 @@ openstack role add --project service --user glance admin
 
 openstack service create --name glance --description "Openstack Image" image
 
-openstack endpoint create --region RegionOne image public http://controller:9292
+openstack endpoint create --region RegionOne image public http://192.168.56.110:9292
 
-openstack endpoint create --region RegionOne image internal http://controller:9292
+openstack endpoint create --region RegionOne image internal http://192.168.56.110:9292
 
-openstack endpoint create --region RegionOne image admin http://controller:9292
+openstack endpoint create --region RegionOne image admin http://192.168.56.110:9292
 ```
 
 #### (2) 확인
@@ -64,14 +64,14 @@ bind_host = 0.0.0.0
 ### 데이터베이스 액세스 구성
 [database]
 # ...
-connection = mysql+pymysql://glance:GLANCE_DBPASS@controller/glance
+connection = mysql+pymysql://glance:GLANCE_DBPASS@192.168.56.110/glance
 
 ### 인즌 서비스 액세스 구성
 [keystone_authtoken]
 # ...
-www_authenticate_uri = http://controller:5000
-auth_url = http://controller:5000
-memcached_servers = controller:11211
+www_authenticate_uri = http://192.168.56.110:5000
+auth_url = http://192.168.56.110:5000
+memcached_servers = 192.168.56.110:11211
 auth_type = password
 project_domain_name = Default
 user_domain_name = Default
