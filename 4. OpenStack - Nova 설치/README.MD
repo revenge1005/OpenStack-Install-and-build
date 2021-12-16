@@ -69,6 +69,8 @@ openstack user list
 openstack service list
 
 openstack endpoint list | grep nova
+
+openstack endpoint list | grep placement
 ```
 
 ## 1-3. Controller 노드 - Nova 패키지 설치 및 설정
