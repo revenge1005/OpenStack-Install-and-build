@@ -69,3 +69,48 @@ keystone-manage bootstrap --bootstrap-password ADMIN_PASS \
   --bootstrap-public-url http://controller:5000/v3/ \
   --bootstrap-region-id RegionOne
 ```
+
+## 1-3. Apache HTTP Server 구성
+
+#### (1) http config 구성
+```
+vim /etc/apache2/apache2.conf
+
+ServerName controller
+```
+
+### (2) HTTP 서비스가 부팅 시 시작되도록 등록하고 서비스를 시작한다.
+```
+systemctl enable apache2
+systemctl restart apache2
+```
+
+## 1-4. 환경 변수 설정
+
+#### (1) Start the Apache HTTP service and configure it to start when the system boots:
+#### (2) Configure the administrative account by setting the proper environmental variables:
+```
+vim ~/keystonerc
+
+$ export OS_USERNAME=admin
+$ export OS_PASSWORD=ADMIN_PASS
+$ export OS_PROJECT_NAME=admin
+$ export OS_USER_DOMAIN_NAME=Default
+$ export OS_PROJECT_DOMAIN_NAME=Default
+$ export OS_AUTH_URL=http://controller:5000/v3
+$ export OS_IDENTITY_API_VERSION=3
+```
+
+#### (3)
+```
+chmod 600 ~/keystonerc
+source ~/keystonerc
+echo "source ~/keystonerc " >> ~/.bash_profile
+
+openstack token issue
+```
+
+#### (4) 각종 서비스들이 설정될 service project 생성
+```
+openstack project create --domain default --description "Service Project" service
+```
