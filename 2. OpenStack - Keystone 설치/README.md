@@ -31,11 +31,11 @@ apt -y install keystone python3-openstackclient apache2 libapache2-mod-wsgi-py3 
 vim /etc/keystone/keystone.conf
 
 # line 436: uncomment and specify Memcache Server
-memcache_servers = 192.168.56.110:11211
+memcache_servers = controller:11211
 
 [database]
 # ...
-connection = mysql+pymysql://keystone:KEYSTONE_DBPASS@192.168.56.110/keystone
+connection = mysql+pymysql://keystone:KEYSTONE_DBPASS@controller/keystone
 
 [token]
 provider = fernet
@@ -67,9 +67,9 @@ ls -l /etc/keystone/credential-keys
 #### (6) indentity 서비스에 대해 bootstrap 적용
 ```
 keystone-manage bootstrap --bootstrap-password ADMIN_PASS \
-  --bootstrap-admin-url http://192.168.56.110:5000/v3/ \
-  --bootstrap-internal-url http://192.168.56.110:5000/v3/ \
-  --bootstrap-public-url http://192.168.56.110:5000/v3/ \
+  --bootstrap-admin-url http://controller:5000/v3/ \
+  --bootstrap-internal-url http://controller:5000/v3/ \
+  --bootstrap-public-url http://controller:5000/v3/ \
   --bootstrap-region-id RegionOne
 ```
 
@@ -79,6 +79,7 @@ keystone-manage bootstrap --bootstrap-password ADMIN_PASS \
 ```
 vim /etc/apache2/apache2.conf
 
+# line 70: specify server name
 ServerName controller
 ```
 
@@ -95,13 +96,14 @@ systemctl restart apache2
 ```
 vim ~/keystonerc
 
+export OS_PROJECT_DOMAIN_NAME=default
+export OS_USER_DOMAIN_NAME=default
+export OS_PROJECT_NAME=admin
 export OS_USERNAME=admin
 export OS_PASSWORD=ADMIN_PASS
-export OS_PROJECT_NAME=admin
-export OS_USER_DOMAIN_NAME=Default
-export OS_PROJECT_DOMAIN_NAME=Default
-export OS_AUTH_URL=http://192.168.56.110:5000/v3
+export OS_AUTH_URL=http://controller:5000/v3
 export OS_IDENTITY_API_VERSION=3
+export OS_IMAGE_API_VERSION=2
 ```
 
 #### (3)
