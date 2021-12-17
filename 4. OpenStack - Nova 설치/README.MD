@@ -43,11 +43,11 @@ openstack role add --project service --user nova admin
 
 openstack service create --name nova --description "OpenStack Compute" compute
 
-openstack endpoint create --region RegionOne compute public http://192.168.56.110:8774/v2.1
+openstack endpoint create --region RegionOne compute public http://controller:8774/v2.1
 
-openstack endpoint create --region RegionOne compute internal http://192.168.56.110:8774/v2.1
+openstack endpoint create --region RegionOne compute internal http://controller:8774/v2.1
 
-openstack endpoint create --region RegionOne compute admin http://192.168.56.110:8774/v2.1
+openstack endpoint create --region RegionOne compute admin http://controller:8774/v2.1
 ```
 ```
 openstack user create --domain default --project service --password PLACEMENT_DBPASS placement
@@ -56,11 +56,11 @@ openstack role add --project service --user placement admin
 
 openstack service create --name placement --description "Compute Placement API" placement
 
-openstack endpoint create --region RegionOne placement public http://192.168.56.110:8778
+openstack endpoint create --region RegionOne placement public http://controller:8778
 
-openstack endpoint create --region RegionOne placement internal http://192.168.56.110:8778
+openstack endpoint create --region RegionOne placement internal http://controller:8778
 
-openstack endpoint create --region RegionOne placement admin http://192.168.56.110:8778
+openstack endpoint create --region RegionOne placement admin http://controller:8778
 ```
 
 #### (2) 확인
@@ -87,35 +87,30 @@ cp /etc/nova/nova.conf /etc/nova/nova.conf.bak
 
 vim /etc/nova/nova.conf
 
+[DEFAULT]
+# ...
+transport_url = rabbit://openstack:RABBIT_PASS@controller:5672/
+my_ip = 192.168.56.110
+
 [api_database]
 # ...
-connection = mysql+pymysql://nova:NOVA_DBPASS@192.168.56.110/nova_api
+connection = mysql+pymysql://nova:NOVA_DBPASS@controller/nova_api
 
 [database]
 # ...
-connection = mysql+pymysql://nova:NOVA_DBPASS@192.168.56.110/nova
-
-[DEFAULT]
-# ...
-transport_url = rabbit://openstack:RABBIT_PASS@192.168.56.110:5672/
-my_ip = 192.168.56.110
-use_neutron = true
+connection = mysql+pymysql://nova:NOVA_DBPASS@controller/nova
 
 [api]
 # ...
 auth_strategy = keystone
 
-[keystone_authtoken]
+[glance]
 # ...
-www_authenticate_uri = http://192.168.56.110:5000/
-auth_url = http://192.168.56.110:5000/
-memcached_servers = 192.168.56.110:11211
-auth_type = password
-project_domain_name = Default
-user_domain_name = Default
-project_name = service
-username = nova
-password = NOVA_PASS
+api_servers = http://controller:9292
+
+[oslo_concurrency]
+# ...
+lock_path = /var/lib/nova/tmp
 
 [vnc]
 enabled = true
@@ -123,13 +118,17 @@ enabled = true
 server_listen = $my_ip
 server_proxyclient_address = $my_ip
 
-[glance]
+[keystone_authtoken]
 # ...
-api_servers = http://192.168.56.110:9292
-
-[oslo_concurrency]
-# ...
-lock_path = /var/lib/nova/tmp
+www_authenticate_uri = http://controller:5000/
+auth_url = http://controller:5000/
+memcached_servers = controller:11211
+auth_type = password
+project_domain_name = Default
+user_domain_name = Default
+project_name = service
+username = nova
+password = NOVA_PASS
 
 [placement]
 # ...
@@ -138,9 +137,12 @@ project_domain_name = Default
 project_name = service
 auth_type = password
 user_domain_name = Default
-auth_url = http://192.168.56.110:5000/v3
+auth_url = http://controller:5000/v3
 username = placement
 password = PLACEMENT_PASS
+
+[placement_database]
+connection = mysql+pymysql://nova:PLACEMENT_DBPASS@controller/nova_placement
 
 [wsgi]
 api_paste_config = /etc/nova/api-paste.ini
@@ -150,47 +152,16 @@ chmod 640 /etc/nova/nova.conf
 chgrp nova /etc/nova/nova.conf
 ```
 
-#### (2) 설정 - 2
-```
-mv /etc/placement/placement.conf /etc/placement/placement.conf.org
-vi /etc/placement/placement.conf
-```
-```
-# create new
-[DEFAULT]
-debug = false
-
-[api]
-auth_strategy = keystone
-
-[keystone_authtoken]
-www_authenticate_uri = http://192.168.56.110:5000
-auth_url = http://192.168.56.110:5000
-memcached_servers = 192.168.56.110:11211
-auth_type = password
-project_domain_name = default
-user_domain_name = default
-project_name = service
-username = placement
-password = PLACEMENT_DBPASS
-
-[placement_database]
-connection = mysql+pymysql://placement:PLACEMENT_DBPASS@192.168.56.110/placement
-```
-```
-chmod 640 /etc/placement/placement.conf
-chgrp placement /etc/placement/placement.conf
-```
-
 ## 1-4. 데이터베이스 테이블 생성
 ```
 su -s /bin/sh -c "nova-manage api_db sync" nova
 
-su -s /bin/sh -c "nova-manage cell_v2 map_cell0" nova
+su -s /bin/sh -c "nova-manage cell_v2 map_cell0 --database_connection mysql+pymysql://nova:NOVA_PASS@192.168.56.110/nova_cell0" nova
 
 su -s /bin/sh -c "nova-manage db sync" nova
 
-su -s /bin/sh -c "nova-manage cell_v2 create_cell --name=cell1 --verbose" nova
+su -s /bin/bash nova -c "nova-manage cell_v2 create_cell --name cell1 --database_connection mysql+pymysql://nova:NOVA_PASS@192.168.56.110/nova \
+--transport-url rabbit://openstack:NOVA_PASS@192.168.56.110:5672"
 
 su -s /bin/sh -c "nova-manage cell_v2 list_cells" nova
 ```
@@ -225,7 +196,7 @@ vim /etc/nova/nova.conf
 
 [DEFAULT]
 # ...
-transport_url = rabbit://openstack:RABBIT_PASS@192.168.56.110
+transport_url = rabbit://openstack:RABBIT_PASS@controller
 my_ip = 192.168.56.120
 
 [api]
@@ -234,9 +205,9 @@ auth_strategy = keystone
 
 [keystone_authtoken]
 # ...
-www_authenticate_uri = http://192.168.56.110:5000/
-auth_url = http://192.168.56.110:5000/
-memcached_servers = 192.168.56.110:11211
+www_authenticate_uri = http://controller:5000/
+auth_url = http://controller:5000/
+memcached_servers = controller:11211
 auth_type = password
 project_domain_name = Default
 user_domain_name = Default
@@ -249,11 +220,11 @@ password = NOVA_PASS
 enabled = true
 server_listen = 0.0.0.0
 server_proxyclient_address = $my_ip
-novncproxy_base_url = http://192.168.56.110:6080/vnc_auto.html
+novncproxy_base_url = http://controller:6080/vnc_auto.html
 
 [glance]
 # ...
-api_servers = http://192.168.56.110:9292
+api_servers = http://controller:9292
 
 [oslo_concurrency]
 # ...
@@ -266,12 +237,16 @@ project_domain_name = Default
 project_name = service
 auth_type = password
 user_domain_name = Default
-auth_url = http://192.168.56.110:5000/v3
+auth_url = http://controller:5000/v3
 username = placement
 password = PLACEMENT_PASS
 
 [wsgi]
 api_paste_config = /etc/nova/api-paste.ini
+```
+```
+chgrp nova /etc/nova/nova.conf
+chmod 640 /etc/nova/nova.conf
 ```
 
 ## 2-2 Compute 노드 - Nova 서비스 실행
