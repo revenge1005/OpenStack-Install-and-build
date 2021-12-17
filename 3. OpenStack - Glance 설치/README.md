@@ -51,7 +51,7 @@ openstack endpoint list
 apt install glance -y
 ```
 
-#### (2) 설정 - 1
+#### (2) 설정 
 ```
 cp /etc/glance/glance-api.conf /etc/glance/glance-api.conf.bak
 
@@ -95,43 +95,6 @@ filesystem_store_datadir = /var/lib/glance/images/
 chmod 644 /etc/glance/glance-api.conf
 
 chown glance.glance /etc/glance/glance-api.conf
-```
-
-#### (2) 설정 - 2
-```
-mv /etc/glance/glance-registry.conf /etc/glance/glance-registry.conf.bak
-vim /etc/glance/glance-registry.conf 
-
-# create new
-[DEFAULT]
-bind_host = 0.0.0.0
-
-### 데이터베이스 액세스 구성
-[database]
-# ...
-connection = mysql+pymysql://glance:GLANCE_DBPASS@controller/glance
-
-### 인즌 서비스 액세스 구성
-[keystone_authtoken]
-# ...
-www_authenticate_uri = http://controller:5000
-auth_url = http://controller:5000
-memcached_servers = controller:11211
-auth_type = password
-project_domain_name = Default
-user_domain_name = Default
-project_name = service
-username = glance
-password = GLANCE_PASS
-
-### 인증 서비스 액세스 구성
-[paste_deploy]
-# ...
-flavor = keystone
-```
-```
-chmod 644 /etc/glance/glance-registry.conf 
-chown glance.glance /etc/glance/glance-registry.conf 
 ```
 
 #### (3) glance-manage db_sync [DB이름] 명령을 통해 image service 데이터베이스 초기 구성
