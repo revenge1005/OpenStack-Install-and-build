@@ -83,77 +83,102 @@ apt -y install nova-api nova-conductor nova-scheduler nova-novncproxy placement-
 
 #### (2) 설정 - 1
 ```
-cp /etc/nova/nova.conf /etc/nova/nova.conf.bak
+mv /etc/nova/nova.conf /etc/nova/nova.conf.org
 
 vim /etc/nova/nova.conf
 
+# create new
 [DEFAULT]
-# ...
-transport_url = rabbit://openstack:RABBIT_PASS@controller:5672/
+# define own IP address
 my_ip = 192.168.56.110
-
-[api_database]
-# ...
-connection = mysql+pymysql://nova:NOVA_DBPASS@controller/nova_api
-
-[database]
-# ...
-connection = mysql+pymysql://nova:NOVA_DBPASS@controller/nova
+state_path = /var/lib/nova
+enabled_apis = osapi_compute,metadata
+log_dir = /var/log/nova
+# RabbitMQ connection info
+transport_url = rabbit://openstack:RABBIT_PASS@controller:5672/
 
 [api]
-# ...
 auth_strategy = keystone
 
+# Glance connection info
 [glance]
-# ...
 api_servers = http://controller:9292
 
 [oslo_concurrency]
-# ...
-lock_path = /var/lib/nova/tmp
+lock_path = $state_path/tmp
 
-[vnc]
-enabled = true
-# ...
-server_listen = $my_ip
-server_proxyclient_address = $my_ip
+# MariaDB connection info
+[api_database]
+connection = mysql+pymysql://nova:NOVA_DBPASS@controller/nova_api
 
+[database]
+connection = mysql+pymysql://nova:NOVA_DBPASS@controller/nova
+
+# Keystone auth info
 [keystone_authtoken]
-# ...
-www_authenticate_uri = http://controller:5000/
-auth_url = http://controller:5000/
+www_authenticate_uri = http://controller:5000
+auth_url = http://controller:5000
 memcached_servers = controller:11211
 auth_type = password
-project_domain_name = Default
-user_domain_name = Default
+project_domain_name = default
+user_domain_name = default
 project_name = service
 username = nova
 password = NOVA_PASS
 
 [placement]
-# ...
-region_name = RegionOne
-project_domain_name = Default
-project_name = service
+auth_url = http://controller:5000
+os_region_name = RegionOne
 auth_type = password
-user_domain_name = Default
-auth_url = http://controller:5000/v3
+project_domain_name = default
+user_domain_name = default
+project_name = service
 username = placement
 password = PLACEMENT_PASS
-
-[placement_database]
-connection = mysql+pymysql://nova:PLACEMENT_DBPASS@controller/nova_placement
 
 [wsgi]
 api_paste_config = /etc/nova/api-paste.ini
 ```
 ```
-chmod 640 /etc/nova/nova.conf
 chgrp nova /etc/nova/nova.conf
+chmod 640 /etc/nova/nova.conf
+```
+
+#### (3) 설정 - 2
+```
+mv /etc/placement/placement.conf /etc/placement/placement.conf.org
+vi /etc/placement/placement.conf
+
+# create new
+[DEFAULT]
+debug = false
+
+[api]
+auth_strategy = keystone
+
+[keystone_authtoken]
+www_authenticate_uri = http://controller:5000
+auth_url = http://controller:5000
+memcached_servers = controller:11211
+auth_type = password
+project_domain_name = default
+user_domain_name = default
+project_name = service
+username = placement
+password = PLACEMENT_PASS
+
+[placement_database]
+connection = mysql+pymysql://placement:PLACEMENT_PASS@controller/placement
+```
+```
+chmod 640 /etc/placement/placement.conf
+chgrp placement /etc/placement/placement.conf
 ```
 
 ## 1-4. 데이터베이스 테이블 생성
 ```
+su -s /bin/bash placement -c "placement-manage db sync"
+
 su -s /bin/sh -c "nova-manage api_db sync" nova
 
 su -s /bin/sh -c "nova-manage cell_v2 map_cell0 --database_connection mysql+pymysql://nova:NOVA_PASS@192.168.56.110/nova_cell0" nova
@@ -188,7 +213,7 @@ openstack compute service list
 apt install qemu-kvm libvirt-daemon-system libvirt-clients virtinst bridge-utils nova-compute-kvm python3-openstackclient nova-api-metadata nova-compute python3-novaclient -y
 ```
 
-#### (2) 설정
+#### (2) 설정 
 ```
 cp /etc/nova/nova.conf /etc/nova/nova.conf.bak
 
