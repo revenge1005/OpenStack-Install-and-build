@@ -7,9 +7,12 @@ mysql -u root -p
 ```
 ```
 CREATE DATABASE nova_api;
+
 CREATE DATABASE nova;
+
 CREATE DATABASE nova_cell0;
-create database nova_placement;
+
+CREATE DATABASE placement;
 ```
 ```
 GRANT ALL PRIVILEGES ON nova_api.* TO 'nova'@'localhost' IDENTIFIED BY 'NOVA_DBPASS';
@@ -24,9 +27,9 @@ GRANT ALL PRIVILEGES ON nova_cell0.* TO 'nova'@'localhost' IDENTIFIED BY 'NOVA_D
 
 GRANT ALL PRIVILEGES ON nova_cell0.* TO 'nova'@'%' IDENTIFIED BY 'NOVA_DBPASS';
 
-grant all privileges on placement.* to placement@'localhost' identified by 'PLACEMENT_DBPASS'; 
+GRANT ALL PRIVILEGES ON placement.* TO 'placement'@'localhost' IDENTIFIED BY 'PLACEMENT_DBPASS';
 
-grant all privileges on placement.* to placement@'%' identified by 'PLACEMENT_DBPASS'; 
+GRANT ALL PRIVILEGES ON placement.* TO 'placement'@'%' IDENTIFIED BY 'PLACEMENT_DBPASS';
 
 flush privileges;
 
@@ -79,7 +82,6 @@ openstack endpoint list | grep placement
 #### (1) 설치
 ```
 apt -y install nova-api nova-conductor nova-scheduler nova-novncproxy placement-api python3-novaclient
-apt install nova-api nova-conductor nova-novncproxy nova-scheduler
 ```
 
 #### (2) 설정 - 1
@@ -110,30 +112,38 @@ lock_path = $state_path/tmp
 
 # MariaDB connection info
 [api_database]
+# ...
 connection = mysql+pymysql://nova:NOVA_DBPASS@controller/nova_api
 
 [database]
+# ...
 connection = mysql+pymysql://nova:NOVA_DBPASS@controller/nova
 
 # Keystone auth info
 [keystone_authtoken]
-www_authenticate_uri = http://controller:5000
-auth_url = http://controller:5000
+www_authenticate_uri = http://controller:5000/
+auth_url = http://controller:5000/
 memcached_servers = controller:11211
 auth_type = password
-project_domain_name = default
-user_domain_name = default
+project_domain_name = Default
+user_domain_name = Default
 project_name = service
 username = nova
 password = NOVA_PASS
 
+[vnc]
+enabled = true
+# ...
+server_listen = $my_ip
+server_proxyclient_address = $my_ip
+
 [placement]
-auth_url = http://controller:5000
-os_region_name = RegionOne
-auth_type = password
-project_domain_name = default
-user_domain_name = default
+region_name = RegionOne
+project_domain_name = Default
 project_name = service
+auth_type = password
+user_domain_name = Default
+auth_url = http://controller:5000/v3
 username = placement
 password = PLACEMENT_PASS
 
@@ -150,26 +160,24 @@ chmod 640 /etc/nova/nova.conf
 mv /etc/placement/placement.conf /etc/placement/placement.conf.org
 vi /etc/placement/placement.conf
 
-# create new
-[DEFAULT]
-debug = false
+[placement_database]
+# ...
+connection = mysql+pymysql://placement:PLACEMENT_DBPASS@controller/placement
 
 [api]
+# ...
 auth_strategy = keystone
 
 [keystone_authtoken]
-www_authenticate_uri = http://controller:5000
-auth_url = http://controller:5000
+# ...
+auth_url = http://controller:5000/v3
 memcached_servers = controller:11211
 auth_type = password
-project_domain_name = default
-user_domain_name = default
+project_domain_name = Default
+user_domain_name = Default
 project_name = service
 username = placement
 password = PLACEMENT_PASS
-
-[placement_database]
-connection = mysql+pymysql://placement:PLACEMENT_PASS@controller/placement
 ```
 ```
 chmod 640 /etc/placement/placement.conf
@@ -182,12 +190,12 @@ su -s /bin/bash placement -c "placement-manage db sync"
 
 su -s /bin/sh -c "nova-manage api_db sync" nova
 
-su -s /bin/sh -c "nova-manage cell_v2 map_cell0 --database_connection mysql+pymysql://nova:NOVA_PASS@192.168.56.110/nova_cell0" nova
+su -s /bin/sh -c "nova-manage cell_v2 map_cell0 --database_connection mysql+pymysql://nova:NOVA_PASS@controller/nova_cell0" nova
+
+su -s /bin/sh -c "nova-manage cell_v2 create_cell --name cell1 --database_connection mysql+pymysql://nova:NOVA_PASS@192.168.56.110/nova \
+--transport-url rabbit://openstack:NOVA_PASS@192.168.56.110:5672" nova
 
 su -s /bin/sh -c "nova-manage db sync" nova
-
-su -s /bin/bash nova -c "nova-manage cell_v2 create_cell --name cell1 --database_connection mysql+pymysql://nova:NOVA_PASS@192.168.56.110/nova \
---transport-url rabbit://openstack:NOVA_PASS@192.168.56.110:5672"
 
 su -s /bin/sh -c "nova-manage cell_v2 list_cells" nova
 ```
