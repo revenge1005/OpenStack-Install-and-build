@@ -79,6 +79,7 @@ openstack endpoint list | grep placement
 #### (1) 설치
 ```
 apt -y install nova-api nova-conductor nova-scheduler nova-novncproxy placement-api python3-novaclient
+apt install nova-api nova-conductor nova-novncproxy nova-scheduler
 ```
 
 #### (2) 설정 - 1
