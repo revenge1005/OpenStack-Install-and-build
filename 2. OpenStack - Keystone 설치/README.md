@@ -81,7 +81,7 @@ vim /etc/apache2/apache2.conf
 ServerName controller
 ```
 
-### (2) HTTP 서비스가 부팅 시 시작되도록 등록하고 서비스를 시작한다.
+#### (2) HTTP 서비스가 부팅 시 시작되도록 등록하고 서비스를 시작한다.
 ```
 systemctl enable apache2
 systemctl restart apache2
@@ -94,17 +94,16 @@ systemctl restart apache2
 ```
 vim ~/keystonerc
 
-export OS_PROJECT_DOMAIN_NAME=default
-export OS_USER_DOMAIN_NAME=default
+export OS_PROJECT_DOMAIN_NAME=Default
+export OS_USER_DOMAIN_NAME=Default
 export OS_PROJECT_NAME=admin
 export OS_USERNAME=admin
 export OS_PASSWORD=ADMIN_PASS
 export OS_AUTH_URL=http://controller:5000/v3
 export OS_IDENTITY_API_VERSION=3
 export OS_IMAGE_API_VERSION=2
+export OS_AUTH_TYPE=password
 ```
-
-#### (3)
 ```
 chmod 600 ~/keystonerc
 source ~/keystonerc
@@ -113,9 +112,21 @@ echo "source ~/keystonerc " >> ~/.bash_profile
 openstack token issue
 ```
 
-#### (4) 각종 서비스들이 설정될 service project 생성
+#### (3) 각종 서비스들이 설정될 service project 생성
 ```
 openstack project create --domain default --description "Service Project" service
+```
+
+#### (4-1) Test - 사용자 demo 및 역할 user 생성
+```
+openstack user create --domain default --password-prompt demo
+
+openstack role create user
+```
+
+#### (4-2) Test - 사용자 demo에게 user라는 역할 부여
+```
+openstack role add --project service --user demo user
 ```
 
 #### (5) 결과 확인
