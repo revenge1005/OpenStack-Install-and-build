@@ -285,7 +285,7 @@ chmod 640 /etc/nova/nova.conf
 ## 2-2 Compute 노드 - Nova 서비스 실행
 #### (1) 하드웨어 가속 사용 가능 여부 확인
 ```
-$ egrep -c '(vmx|svm)' /proc/cpuinfo
+egrep -c '(vmx|svm)' /proc/cpuinfo
 ```
 
 #### (2) 1 혹은 그 이상일 경우 사용가능이므로 더이상의 설정 필요없음
