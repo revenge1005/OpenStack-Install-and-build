@@ -299,11 +299,12 @@ vi /etc/nova/nova.conf
 virt_type = qemu
 ```
 
-#### (3) 커널 모듈 vhost_net을 활성화하는데 이 vhost_net은 virtio 네트워크 인터페이스를 위해 사용 되며 virtio는 가상화 환경에서 네트워크와 디스크 장치 드라이버를 위해서 사용되는 가상화 표준
-#### 커널에 vhost 모듈이 로딩됐는지 확인
+#### (3) 커널 모듈 vhost_net을 활성화하는데 이 vhost_net은 virtio 네트워크 인터페이스를 위해 사용 되며 virtio는 가상화 환경에서 네트워크와 디스크 장치 드라이버를 위해서 사용되는 가상화 표준 이름이다.
 ```
 modprobe vhost_net
-
+```
+#### (3-1) 커널에 vhost 모듈이 로딩됐는지 확인
+```
 lsmod | grep vhost
 ```
 #### (4) 부팅 시에 이 모듈이 자동으로 커널에 로딩되도록 모듈 설정 파일에 추가한다.
