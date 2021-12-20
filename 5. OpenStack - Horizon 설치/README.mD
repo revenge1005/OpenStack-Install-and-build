@@ -1,4 +1,4 @@
-## 1-1. Horizon 설치
+## 1-1. Horizon 패키지 설치 및 설정
 
 #### - https://docs.openstack.org/horizon/ussuri/install/install-ubuntu.html
 
@@ -17,21 +17,19 @@ vim /etc/openstack-dashboard/local_settings.py
 ### *로 할 경우 모든 호스트 허용되며, 여러 호스트를 명시할때는 , 로 구분
 ALLOWED_HOSTS = ['*', 'localhost' ]
 
-
-### memcached 세션 저장소 구성 
-### 세션 엔진으로 장고를 사용
-SESSION_ENGINE = 'django.contrib.sessions.backends.cache'
-
 CACHES = {
     'default': {
          'BACKEND': 'django.core.cache.backends.memcached.MemcachedCache',
-         'LOCATION': '192.168.56.110:11211',
+         'LOCATION': 'controller:11211',
     }
 }
 
+### memcached 세션 저장소 구성
+SESSION_ENGINE = 'django.contrib.sessions.backends.cache'
+
 
 ### openstack 호스트가 controller 임을 명시
-OPENSTACK_HOST = "192.168.56.110"
+OPENSTACK_HOST = "controller"
 
 
 ### identity Service API의 URL 명시(버전 3 사용)
@@ -39,14 +37,6 @@ OPENSTACK_KEYSTONE_URL = "http://%s/identity/v3" % OPENSTACK_HOST
 
 
 TIME_ZONE = "Asia/Seoul"
-
-
-### openstack api version 명시(identity : 3, image : 2, volume : 2)
-OPENSTACK_API_VERSIONS = {
-    "identity": 3,
-    "image": 2,
-    "volume": 3,
-}
 
 
 ### keystone Multidomain 지원 설정
