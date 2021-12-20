@@ -58,7 +58,7 @@ keystone-manage credential_setup --keystone-user keystone --keystone-group keyst
 ```
 ls -l /etc/keystone/fernet-keys/
 
-ls -l /etc/keystone/credential-keys
+ls -l /etc/keystone/credential-keys/
 ```
 
 #### (6) indentity 서비스에 대해 bootstrap 적용
