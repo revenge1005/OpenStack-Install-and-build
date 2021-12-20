@@ -112,17 +112,14 @@ apt install mariadb-server python3-pymysql -y
 
 #### (2) Create and edit the /etc/mysql/mariadb.conf.d/99-openstack.cnf file and complete the following actions:
 ```
-cat <<EOF >>/etc/mysql/mariadb.conf.d/99-openstack.cnf
+vim /etc/mysql/mariadb.conf.d/50-server.cnf
 
-[mysqld]
+# line 28: change
 bind-address = 192.168.56.110
 
-default-storage-engine = innodb
-innodb_file_per_table = on
-max_connections = 4096
-collation-server = utf8_general_ci
-character-set-server = utf8
-EOF
+#lien 105: 변경
+character-set-server  = utf8
+collation-server      = utf8_general_ci
 ```
 
 #### (3) Restart the database service:
@@ -163,6 +160,13 @@ systemctl restart rabbitmq-server
 systemctl enable rabbitmq-server
 ```
 
+#### (5) 프로세스 및 포트 확인
+```
+ps -ef | grep rabbitmq
+
+lsof -i tcp:5672
+```
+
 ## 6-1 (Controller Node) - Memcached 설정
 
 #### - Identiry 서비스 인증에서 토큰을 캐싱하기 위해 컨트롤러 노드에 구성한다.
@@ -184,4 +188,10 @@ vim /etc/memcached.conf
 ```
 systemctl restart memcached
 systemctl enable memcached
+```
+#### (4) 프로세스 및 포트 확인
+```
+ps -ef | grep memcached
+
+lsof -i tcp:11211
 ```
