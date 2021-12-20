@@ -50,12 +50,12 @@ OPENSTACK_KEYSTONE_DEFAULT_DOMAIN = 'Default'
 ### 기본 설정으로 사용할 역할 설정(대시보드를 통해 사용자 생성 시 기본값으로 사용됨)
 OPENSTACK_KEYSTONE_DEFAULT_ROLE = "user"
 ```
-#### (3) /etc/apache2/conf-available/openstack-dashboard.conf 파일에서 기본적으로 필요한 WSGIApplicationGroup %{GLOBAL} 구문이 빠져있다면 추가
+#### (3) /etc/apache2/conf-available/openstack-dashboard.conf 파일에서 기본적으로 필요한 WSGIApplicationGroup %{GLOBAL} 구문이 빠져있다면 추가한다.
 ```
 WSGIApplicationGroup %{GLOBAL}
 ```
 
 #### (4) 서비스 재시작
 ```
-systemctl restart apache2 memcached
+systemctl restart apache2 
 ```
