@@ -96,7 +96,7 @@ apt update
 apt upgrade -y 
 ```
 
-#### (3)
+#### (3) Test
 ```
 apt install python3-openstackclient -y
 ```
