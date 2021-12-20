@@ -95,7 +95,7 @@ vim /etc/nova/nova.conf
 state_path = /var/lib/nova
 enabled_apis = osapi_compute,metadata
 log_dir = /var/log/nova
-# define own IP address
+# IP address
 my_ip = 192.168.56.110
 # RabbitMQ connection info
 transport_url = rabbit://openstack:RABBIT_PASS@controller
