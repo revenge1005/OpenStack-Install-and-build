@@ -44,7 +44,7 @@ openstack service list
 openstack endpoint list
 ```
 
-## 1-3. Glance 패키지 설치
+## 1-3. Glance 패키지 설치 및 설정
 
 #### (1) 설치
 ```
@@ -53,10 +53,11 @@ apt install glance -y
 
 #### (2) 설정 
 ```
-cp /etc/glance/glance-api.conf /etc/glance/glance-api.conf.bak
+mv /etc/glance/glance-api.conf /etc/glance/glance-api.conf.bak
 
 vim /etc/glance/glance-api.conf 
-
+```
+```
 # create new
 [DEFAULT]
 bind_host = 0.0.0.0
@@ -69,12 +70,12 @@ connection = mysql+pymysql://glance:GLANCE_DBPASS@controller/glance
 ### 인즌 서비스 액세스 구성
 [keystone_authtoken]
 # ...
-www_authenticate_uri = http://controller:5000
+auth_uri = http://controller:5000
 auth_url = http://controller:5000
 memcached_servers = controller:11211
 auth_type = password
-project_domain_name = Default
-user_domain_name = Default
+project_domain_name = default
+user_domain_name = default
 project_name = service
 username = glance
 password = GLANCE_PASS
@@ -90,11 +91,13 @@ flavor = keystone
 stores = file,http
 default_store = file
 filesystem_store_datadir = /var/lib/glance/images/
-```
-```
-chmod 644 /etc/glance/glance-api.conf
 
-chown glance.glance /etc/glance/glance-api.conf
+[image_format]
+disk_formats = ami,ari,aki,vhd,vhdx,vmdk,raw,qcow2,vdi,iso,ploop.root-tar
+```
+```
+chmod 640 /etc/glance/glance-api.conf
+chown root:glance /etc/glance/glance-api.conf
 ```
 
 #### (3) glance-manage db_sync [DB이름] 명령을 통해 image service 데이터베이스 초기 구성
