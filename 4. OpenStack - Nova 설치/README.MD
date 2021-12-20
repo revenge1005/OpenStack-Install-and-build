@@ -89,7 +89,7 @@ mv /etc/nova/nova.conf /etc/nova/nova.conf.org
 
 vim /etc/nova/nova.conf
 ```
-```
+```bash
 # create new
 [DEFAULT]
 state_path = /var/lib/nova
@@ -157,7 +157,7 @@ chgrp nova /etc/nova/nova.conf
 mv /etc/placement/placement.conf /etc/placement/placement.conf.org
 vi /etc/placement/placement.conf
 ```
-```
+```bash
 [placement_database]
 connection = mysql+pymysql://placement:PLACEMENT_DBPASS@controller/placement
 
@@ -216,7 +216,7 @@ apt install qemu-kvm libvirt-daemon-system libvirt-clients virtinst bridge-utils
 ```
 
 #### (2) 설정 
-```
+```bash
 cp /etc/nova/nova.conf /etc/nova/nova.conf.bak
 
 vim /etc/nova/nova.conf

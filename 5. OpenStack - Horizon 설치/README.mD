@@ -10,7 +10,7 @@ apt install openstack-dashboard -y
 ```
 
 #### (2) 설정
-```
+```bash
 vim /etc/openstack-dashboard/local_settings.py
 
 ### 대시보드에 엑세스 할 수 있는 호스트 명시 

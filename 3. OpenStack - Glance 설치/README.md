@@ -52,7 +52,7 @@ apt install glance -y
 ```
 
 #### (2) 설정 
-```
+```bash
 mv /etc/glance/glance-api.conf /etc/glance/glance-api.conf.bak
 
 vim /etc/glance/glance-api.conf 
