@@ -57,5 +57,7 @@ WSGIApplicationGroup %{GLOBAL}
 
 #### (4) 서비스 재시작
 ```
-systemctl restart apache2 
+chown www-data /var/lib/openstack-dashboard/secret_key
+
+systemctl restart apache2 memcached
 ```
