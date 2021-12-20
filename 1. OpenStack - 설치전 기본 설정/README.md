@@ -115,7 +115,7 @@ vim /etc/mysql/mariadb.conf.d/50-server.cnf
 # line 28: change
 bind-address = 192.168.56.110
 
-#lien 105: 변경
+# line 104: confirm default charaset
 character-set-server  = utf8
 collation-server      = utf8_general_ci
 ```
