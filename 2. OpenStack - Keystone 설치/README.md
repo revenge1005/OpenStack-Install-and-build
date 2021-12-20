@@ -11,15 +11,15 @@ mysql -u root -p
 ```
 create database keystone default character set utf8 default collate utf8_general_ci;
 
-GRANT ALL PRIVILEGES ON keystone.* TO 'keystone'@'localhost' IDENTIFIED BY 'keystone 계정 비밀번호';
+GRANT ALL PRIVILEGES ON keystone.* TO 'keystone'@'localhost' IDENTIFIED BY 'KEYSTONE_DBPASS';
 
-GRANT ALL PRIVILEGES ON keystone.* TO 'keystone'@'%' IDENTIFIED BY 'keystone 계정 비밀번호';
+GRANT ALL PRIVILEGES ON keystone.* TO 'keystone'@'%' IDENTIFIED BY 'KEYSTONE_DBPASS';
 
 flush privileges;
 exit
 ```
 
-## 1-2. Keystone 설치
+## 1-2. Keystone 패키지 설치 및 설정
 
 #### (1) keystone 설치 
 ```
@@ -33,10 +33,12 @@ vim /etc/keystone/keystone.conf
 # line 436: uncomment and specify Memcache Server
 memcache_servers = controller:11211
 
+# line 594: change to MariaDB connection info
 [database]
 # ...
 connection = mysql+pymysql://keystone:KEYSTONE_DBPASS@controller/keystone
 
+# line 2508: uncomment
 [token]
 provider = fernet
 ```
@@ -46,21 +48,16 @@ provider = fernet
 su -s /bin/sh -c "keystone-manage db_sync" keystone
 ```
 
-#### (4) keystone-manage fernet_setup 명령을 실행시켜 fernet key 저장소 초기화
+#### (4) keystone-manage을 통해서 fernet key 저장소 초기화
 ```
 keystone-manage fernet_setup --keystone-user keystone --keystone-group keystone
-```
-#### (4-1) 확인
-```
-ls -l /etc/keystone/fernet-keys/
-```
 
-#### (5) keystone-manage credential_setup 명령을 실행시켜 fernet key 암호화
-```
 keystone-manage credential_setup --keystone-user keystone --keystone-group keystone
 ```
-#### (5-1) 확인
+#### (5) 결과 확인
 ```
+ls -l /etc/keystone/fernet-keys/
+
 ls -l /etc/keystone/credential-keys
 ```
 
