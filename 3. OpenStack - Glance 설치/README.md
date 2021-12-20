@@ -102,7 +102,7 @@ chown root:glance /etc/glance/glance-api.conf
 
 #### (3) glance-manage db_sync [DB이름] 명령을 통해 image service 데이터베이스 초기 구성
 ```
-su -s /bin/sh -c "glance-manage db_sync" glance
+su -s /bin/bash glance -c "glance-manage db_sync"
 ```
 
 #### (3-1) 결과 확인
