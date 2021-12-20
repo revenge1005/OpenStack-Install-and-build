@@ -89,14 +89,12 @@ chronyc sources
 apt -y install software-properties-common
 add-apt-repository cloud-archive:victoria
 ```
-
-#### (2)
 ```
 apt update
 apt upgrade -y 
 ```
 
-#### (3) Test
+#### (2) Test
 ```
 apt install python3-openstackclient -y
 ```
