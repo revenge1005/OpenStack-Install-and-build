@@ -62,6 +62,7 @@ ls -l /etc/keystone/credential-keys
 ```
 
 #### (6) indentity 서비스에 대해 bootstrap 적용
+#### 사용자, 프로젝트, 역할을 생성하고, 새로 새성된 프로젝트 사용자에게 부여
 ```
 keystone-manage bootstrap --bootstrap-password ADMIN_PASS \
   --bootstrap-admin-url http://controller:5000/v3/ \
