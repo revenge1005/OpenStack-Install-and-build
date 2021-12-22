@@ -116,7 +116,7 @@ apt install mariadb-server python3-pymysql -y
 ```
 cat <<EOF >> /etc/mysql/mariadb.conf.d/99-openstack.cnf
 [mysqld]
-bind-address = 192.168.198.100
+bind-address = controller
 default-storage-engine = innodb
 innodb_file_per_table = on
 max_connections = 4096
