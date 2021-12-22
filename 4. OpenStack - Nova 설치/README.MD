@@ -217,13 +217,12 @@ apt install qemu-kvm libvirt-daemon-system libvirt-clients virtinst bridge-utils
 
 #### (2) 설정 
 ```bash
-cp /etc/nova/nova.conf /etc/nova/nova.conf.bak
+mv /etc/nova/nova.conf /etc/nova/nova.conf.bak
 
 vim /etc/nova/nova.conf
 ```
 ```
 [DEFAULT]
-# ...
 state_path = /var/lib/nova
 enabled_apis = osapi_compute,metadata
 log_dir = /var/log/nova
@@ -233,11 +232,9 @@ my_ip = 192.168.56.120
 transport_url = rabbit://openstack:RABBIT_PASS@controller
 
 [api]
-# ...
 auth_strategy = keystone
 
 [keystone_authtoken]
-# ...
 auth_uri = http://controller:5000/
 auth_url = http://controller:5000/
 memcached_servers = controller:11211
@@ -249,22 +246,18 @@ username = nova
 password = NOVA_PASS
 
 [vnc]
-# ...
 enabled = true
 server_listen = 0.0.0.0
 server_proxyclient_address = $my_ip
 novncproxy_base_url = http://controller:6080/vnc_auto.html
 
 [glance]
-# ...
 api_servers = http://controller:9292
 
 [oslo_concurrency]
-# ...
 lock_path = /var/lib/nova/tmp
 
 [placement]
-# ...
 region_name = RegionOne
 project_domain_name = Default
 project_name = service
