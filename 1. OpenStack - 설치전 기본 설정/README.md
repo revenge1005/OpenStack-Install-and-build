@@ -1,7 +1,8 @@
 
-## 1-1. (모든 노드 해당) - 각 노드의 호스트 정보를 /etc/hosts에 작성
+## 1-1. (모든 노드 해당) - 각 노드의 호스트 정보를 /etc/hosts에 작성 
 
 ```
+sed -i '/127.0.1.1/d' /etc/hosts
 cat <<EOF >>/etc/hosts
 
 # OpenStack Nodes IP adresses.
@@ -9,16 +10,18 @@ cat <<EOF >>/etc/hosts
 192.168.56.120  compute
 192.168.56.130  network
 EOF
+
+apt -y install vim gcc make perl 
 ```
 
-## 1-2. (모든 노드 해당) 방화벽 비활성화
+## 1-2. (모든 노드 해당) 방화벽 비활성화 
 
 ```
 ufw disable
 ufw status
 ```
 
-## 2-1. (Controller Node) - NTP 설치
+## 2-1. (Controller Node) - NTP 설치 및 설정
 
 #### - OpenStack은 여러 노드로 구성되고 각각의 노드는 기본적으로 단말기를 분리하여 구성하는 것을 추천한다. 
 
@@ -53,7 +56,7 @@ systemctl enable chrony
 chronyc sources
 ```
 
-## 2-2. (Compute, Network Node) - NTP 설치
+## 2-2. (Compute, Network Node) - NTP 설치 및 설정
 
 ```
 apt-get install chrony -y
@@ -99,7 +102,7 @@ apt upgrade -y
 apt install python3-openstackclient -y
 ```
 
-## 4-1. (Controller Node) - SQL Databases 설정
+## 4-1. (Controller Node) - SQL Databases 설치 및 설정
 
 #### - 서비스들의 정보 저장을 위해 데이터베이스를 컨트롤러에 구성해야 한다.
 
@@ -131,7 +134,7 @@ systemctl enable mysql
 mysql_secure_installation
 ```
 
-## 5-1. (Controller Node) - RebbitMQ (메시지 큐) 설정
+## 5-1. (Controller Node) - RebbitMQ (메시지 큐) 설치 및 설정
 
 #### - 서비스 간 상호작용에 사용될 메시지 큐를 컨트롤러 노드에 구성해야 한다.
 
@@ -165,7 +168,7 @@ ps -ef | grep rabbitmq
 lsof -i tcp:5672
 ```
 
-## 6-1 (Controller Node) - Memcached 설정
+## 6-1 (Controller Node) - Memcached 설치 및 설정
 
 #### - Identiry 서비스 인증에서 토큰을 캐싱하기 위해 컨트롤러 노드에 구성한다.
 
@@ -192,4 +195,37 @@ systemctl enable memcached
 ps -ef | grep memcached
 
 lsof -i tcp:11211
+```
+
+## 7 (Controller Node) - Etcd 설치 및 설정
+
+#### - etcd(엣시디)는 분산 시스템에서 사용할 수 있는 분산형 Key-Value 저장소
+
+#### - 주로 클러스터 관리, 서비스 검색 및 스케줄러 조정을 위해 사용했으며, 요즘은 쿠버네티스의 기본 데이터 저장소로 많이 사용되고 있다.
+
+#### - 여러 노드의 통신은 Raft 알고리즘에 의해 처리되며, 연결된 노드들 중 리더를 선정하여 클러스터를 관리한다 (클러스터의 노드는 홀수개로 이유러져야 하며, 최소 3개 이상의 노드가 필요)
+
+#### (1) Install the etcd package
+```
+apt -y install etcd
+```
+
+#### (2) Edit the /etc/default/etcd
+```
+cat <<EOF >> /etc/default/etcd
+ETCD_NAME="controller"
+ETCD_DATA_DIR="/var/lib/etcd"
+ETCD_INITIAL_CLUSTER_STATE="new"
+ETCD_INITIAL_CLUSTER_TOKEN="etcd-cluster-01"
+ETCD_INITIAL_CLUSTER="controller=http://controller:2380"
+ETCD_INITIAL_ADVERTISE_PEER_URLS="http://controller:2380"
+ETCD_ADVERTISE_CLIENT_URLS="http://controller:2379"
+ETCD_LISTEN_PEER_URLS="http://0.0.0.0:2380"
+ETCD_LISTEN_CLIENT_URLS="http://controller:2379"
+```
+
+#### (3) Enable and Restart the etcd service
+```
+systemctl restart etcd
+systemctl enable etcd
 ```
