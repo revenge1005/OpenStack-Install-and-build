@@ -13,10 +13,6 @@ apt install openstack-dashboard -y
 ```bash
 vim /etc/openstack-dashboard/local_settings.py
 
-### 대시보드에 엑세스 할 수 있는 호스트 명시 
-### *로 할 경우 모든 호스트 허용되며, 여러 호스트를 명시할때는 , 로 구분
-ALLOWED_HOSTS = ['*', 'localhost' ]
-
 CACHES = {
     'default': {
          'BACKEND': 'django.core.cache.backends.memcached.MemcachedCache',
@@ -31,9 +27,8 @@ SESSION_ENGINE = 'django.contrib.sessions.backends.cache'
 ### openstack 호스트가 controller 임을 명시
 OPENSTACK_HOST = "controller"
 
-
 ### identity Service API의 URL 명시(버전 3 사용)
-OPENSTACK_KEYSTONE_URL = "http://%s/identity/v3" % OPENSTACK_HOST
+OPENSTACK_KEYSTONE_URL = "http://%s:5000/v3" % OPENSTACK_HOST
 
 
 TIME_ZONE = "Asia/Seoul"
@@ -57,7 +52,5 @@ WSGIApplicationGroup %{GLOBAL}
 
 #### (4) 서비스 재시작
 ```
-chown www-data /var/lib/openstack-dashboard/secret_key
-
 systemctl restart apache2 memcached
 ```
