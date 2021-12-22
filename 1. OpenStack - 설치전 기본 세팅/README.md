@@ -221,6 +221,7 @@ ETCD_INITIAL_ADVERTISE_PEER_URLS="http://controller:2380"
 ETCD_ADVERTISE_CLIENT_URLS="http://controller:2379"
 ETCD_LISTEN_PEER_URLS="http://0.0.0.0:2380"
 ETCD_LISTEN_CLIENT_URLS="http://controller:2379"
+EOF
 ```
 
 #### (3) Enable and Restart the etcd service
