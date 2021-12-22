@@ -113,14 +113,15 @@ apt install mariadb-server python3-pymysql -y
 
 #### (2) Create and edit the /etc/mysql/mariadb.conf.d/99-openstack.cnf file and complete the following actions:
 ```
-vim /etc/mysql/mariadb.conf.d/50-server.cnf
-
-# line 28: change
-bind-address = 192.168.56.110
-
-# line 104: confirm default charaset
-character-set-server  = utf8
-collation-server      = utf8_general_ci
+cat <<EOF >> /etc/mysql/mariadb.conf.d/99-openstack.cnf
+[mysqld]
+bind-address = 192.168.198.100
+default-storage-engine = innodb
+innodb_file_per_table = on
+max_connections = 4096
+collation-server = utf8_general_ci
+character-set-server = utf8
+EOF
 ```
 
 #### (3) Restart the database service:
