@@ -86,10 +86,9 @@ apt -y install nova-api nova-conductor nova-scheduler nova-novncproxy placement-
 #### (2) 설정 - 1
 ```
 mv /etc/nova/nova.conf /etc/nova/nova.conf.org
-
-vim /etc/nova/nova.conf
 ```
-```bash
+```
+cat <<EOF >vim /etc/nova/nova.conf
 # create new
 [DEFAULT]
 state_path = /var/lib/nova
@@ -146,6 +145,7 @@ password = PLACEMENT_PASS
 
 [wsgi]
 api_paste_config = /etc/nova/api-paste.ini
+EOF
 ```
 ```
 chmod 640 /etc/nova/nova.conf
@@ -155,9 +155,9 @@ chgrp nova /etc/nova/nova.conf
 #### (3) 설정 - 2
 ```
 mv /etc/placement/placement.conf /etc/placement/placement.conf.org
-vi /etc/placement/placement.conf
 ```
 ```bash
+cat <<EOF >/etc/placement/placement.conf
 [placement_database]
 connection = mysql+pymysql://placement:PLACEMENT_DBPASS@controller/placement
 
@@ -174,6 +174,7 @@ user_domain_name = default
 project_name = service
 username = placement
 password = PLACEMENT_PASS
+EOF
 ```
 ```
 chmod 640 /etc/placement/placement.conf
@@ -197,7 +198,7 @@ su -s /bin/bash nova -c "nova-manage cell_v2 create_cell --name cell1"
 ```
 systemctl restart nova-api nova-scheduler nova-conductor nova-novncproxy apache2
 
-systemctl enable nova-api nova-scheduler nova-conductor nova-novncproxy
+systemctl enable nova-api nova-scheduler nova-conductor nova-novncproxy apache2
 
 openstack compute service list
 ```
@@ -218,10 +219,9 @@ apt install qemu-kvm libvirt-daemon-system libvirt-clients virtinst bridge-utils
 #### (2) 설정 
 ```bash
 mv /etc/nova/nova.conf /etc/nova/nova.conf.bak
-
-vim /etc/nova/nova.conf
 ```
 ```
+cat <<EOF >/etc/nova/nova.conf
 [DEFAULT]
 state_path = /var/lib/nova
 enabled_apis = osapi_compute,metadata
@@ -269,6 +269,7 @@ password = PLACEMENT_PASS
 
 [wsgi]
 api_paste_config = /etc/nova/api-paste.ini
+EOF
 ```
 ```
 chgrp nova /etc/nova/nova.conf

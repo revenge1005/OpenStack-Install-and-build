@@ -54,10 +54,9 @@ apt install glance -y
 #### (2) 설정 
 ```bash
 mv /etc/glance/glance-api.conf /etc/glance/glance-api.conf.bak
-
-vim /etc/glance/glance-api.conf 
 ```
 ```
+cat <<EOF >/etc/glance/glance-api.conf 
 # create new
 [DEFAULT]
 bind_host = 0.0.0.0
@@ -94,6 +93,7 @@ filesystem_store_datadir = /var/lib/glance/images/
 
 [image_format]
 disk_formats = ami,ari,aki,vhd,vhdx,vmdk,raw,qcow2,vdi,iso,ploop.root-tar
+EOF
 ```
 ```
 chmod 640 /etc/glance/glance-api.conf

@@ -92,8 +92,7 @@ systemctl restart apache2
 #### (1) Start the Apache HTTP service and configure it to start when the system boots:
 #### (2) Configure the administrative account by setting the proper environmental variables:
 ```
-vim ~/keystonerc
-
+cat <<EOF >~/keystonerc
 export OS_PROJECT_DOMAIN_NAME=Default
 export OS_USER_DOMAIN_NAME=Default
 export OS_PROJECT_NAME=admin
@@ -103,6 +102,7 @@ export OS_AUTH_URL=http://controller:5000/v3
 export OS_IDENTITY_API_VERSION=3
 export OS_IMAGE_API_VERSION=2
 export OS_AUTH_TYPE=password
+EOF
 ```
 ```
 chmod 600 ~/keystonerc
