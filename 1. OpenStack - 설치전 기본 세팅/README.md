@@ -3,6 +3,7 @@
 
 ```
 sed -i '/127.0.1.1/d' /etc/hosts
+
 cat <<EOF >>/etc/hosts
 
 # OpenStack Nodes IP adresses.
