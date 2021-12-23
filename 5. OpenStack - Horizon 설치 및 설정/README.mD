@@ -33,6 +33,8 @@ OPENSTACK_KEYSTONE_URL = "http://%s:5000/v3" % OPENSTACK_HOST
 
 TIME_ZONE = "Asia/Seoul"
 
+### add to the end
+
 OPENSTACK_API_VERSIONS = {
     "identity": 3,
     "image": 2,
