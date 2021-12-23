@@ -94,8 +94,7 @@ apt -y install software-properties-common
 add-apt-repository cloud-archive:victoria
 ```
 ```
-apt update
-apt upgrade -y 
+apt update && apt upgrade -y 
 ```
 
 #### (2) Test
