@@ -88,7 +88,7 @@ apt -y install nova-api nova-conductor nova-scheduler nova-novncproxy placement-
 mv /etc/nova/nova.conf /etc/nova/nova.conf.org
 ```
 ```
-cat <<EOF >vim /etc/nova/nova.conf
+cat <<EOF >/etc/nova/nova.conf
 # create new
 [DEFAULT]
 state_path = /var/lib/nova
@@ -123,8 +123,8 @@ password = NOVA_PASS
 
 [vnc]
 enabled = true
-server_listen = $my_ip
-server_proxyclient_address = $my_ip
+server_listen = \$my_ip
+server_proxyclient_address = \$my_ip
 
 # Glance connection info
 [glance]
