@@ -131,7 +131,7 @@ server_proxyclient_address = \$my_ip
 api_servers = http://controller:9292
 
 [oslo_concurrency]
-lock_path = $state_path/tmp
+lock_path = \$state_path/tmp
 
 [placement]
 region_name = RegionOne
@@ -248,7 +248,7 @@ password = NOVA_PASS
 [vnc]
 enabled = true
 server_listen = 0.0.0.0
-server_proxyclient_address = $my_ip
+server_proxyclient_address = \$my_ip
 novncproxy_base_url = http://controller:6080/vnc_auto.html
 
 [glance]
