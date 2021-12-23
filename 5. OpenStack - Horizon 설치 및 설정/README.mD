@@ -65,7 +65,7 @@ WSGIApplicationGroup %{GLOBAL}
 
 #### (4) 서비스 재시작
 ```
-systemctl restart apache2 memcached
+systemctl restart apache2
 ```
 
 #### (5) 결과 확인
