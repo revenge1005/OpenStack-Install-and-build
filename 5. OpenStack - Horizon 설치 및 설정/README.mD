@@ -70,4 +70,5 @@ systemctl restart apache2 memcached
 
 #### (5) 결과 확인
 
-#### - [admin 사용자의 ID, Password는 Keystone 설정시에 설정 했다](https://github.com/revenge1005/OpenStack-Install-and-build/tree/main/2.%20OpenStack%20-%20Keystone%20%EC%84%A4%EC%B9%98%20%EB%B0%8F%20%EC%84%A4%EC%A0%95#1-4-%ED%99%98%EA%B2%BD-%EB%B3%80%EC%88%98-%EC%84%A4%EC%A0%95)
+#### - [admin 사용자의 ID, Password는 Keystone bootstrap에서 설정했다](https://github.com/revenge1005/OpenStack-Install-and-build/tree/main/2.%20OpenStack%20-%20Keystone%20%EC%84%A4%EC%B9%98%20%EB%B0%8F%20%EC%84%A4%EC%A0%95#1-4-%ED%99%98%EA%B2%BD-%EB%B3%80%EC%88%98-%EC%84%A4%EC%A0%95)
+
