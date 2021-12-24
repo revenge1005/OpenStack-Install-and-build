@@ -286,7 +286,7 @@ vim /etc/neutron/plugins/ml2/ml2_conf.ini
 [ml2]
 # OK with no value for [tenant_network_types] now (set later if need)
 type_drivers = flat,vlan,gre,vxlan
-tenant_network_type = 
+tenant_network_types = 
 mechanism_drivers = linuxbridge,openvswitch,l2population
 extension_drivers = port_security
 
