@@ -129,7 +129,7 @@ tenant_network_type =
 
 # 대규모의 네트워크에서 트래픽을 보내기 위해 사용되는 드라이버
 # openvswitch, linuxbridge가 주로 사용되며, 여기서는 linuxbridge를 사용한다.
-mechanism_drivers = linuxbridge,openvswitch,l2population
+mechanism_drivers = linuxbridge
 
 # ml2가 지원하는 확장 드라이버 가상머신에서 패킷 필터링 기능을 허용하기 위해 사용
 extension_drivers = port_security
