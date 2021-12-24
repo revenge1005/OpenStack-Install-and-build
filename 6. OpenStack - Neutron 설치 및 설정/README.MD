@@ -453,3 +453,4 @@ systemctl enable nova-compute nova-api-metadata neutron-linuxbridge-agent
 ```
 openstack network agent list
 ```
+![02](https://user-images.githubusercontent.com/42735894/147350543-9c48c44e-77a6-40f3-bf9f-0a43c7666a7c.PNG)
