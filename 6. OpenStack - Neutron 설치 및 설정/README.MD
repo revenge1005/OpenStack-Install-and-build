@@ -107,6 +107,7 @@ password = NOVA_DBPASS
 
 [oslo_concurrency]
 lock_path = \$state_path/tmp
+EOF
 ```
 ```
 chmod 640 /etc/neutron/neutron.conf
