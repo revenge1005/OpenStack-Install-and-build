@@ -47,7 +47,7 @@ openstack endpoint list | grep neutron
 
 #### (1) 설치
 ```
-apt -y install neutron-server neutron-metadata-agent neutron-plugin-ml2 python3-neutronclient 
+apt -y install neutron-server neutron-plugin-ml2 python3-neutronclient 
 ```
 
 #### (2) /etc/neutron/neutron.conf 파일 수정
