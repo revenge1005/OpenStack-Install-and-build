@@ -247,6 +247,9 @@ interface_driver = linuxbridge
 #### (4) /etc/neutron/dhcp_agent.ini 파일 수정
 #### - DHCP 에이전트가 사용하는 파일, 가상 네트워크에 DHCP 서비스를 제공
 ```
+vim /etc/neutron/dhcp_agent.ini 
+```
+```
 [DEFAULT]
 # 가상 네트워크 인터페이스를 관리하기 위해 사용되는 드라이버 (openvswitch, linuxbridge)
 interface_driver = linuxbridge
