@@ -125,7 +125,7 @@ vi /etc/neutron/plugins/ml2/ml2_conf.ini
 type_drivers = flat,vlan,gre,vxlan
 
 # tenant_network로 할당되는 네트워크 유형의 목록을 의미
-tenant_network_type = 
+tenant_network_types = 
 
 # 대규모의 네트워크에서 트래픽을 보내기 위해 사용되는 드라이버
 # openvswitch, linuxbridge가 주로 사용되며, 여기서는 linuxbridge를 사용한다.
