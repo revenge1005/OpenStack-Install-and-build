@@ -264,6 +264,9 @@ enable_isolated_metadata = true
 #### (5) /etc/neutron/metadata_agent.ini 파일 수정
 #### - Metadata 에이전트가 사용하는 파일, 인증정보와 같은 설정정보를 인스턴스에게 제공
 ```
+vim /etc/neutron/metadata_agent.ini
+```
+```
 [DEFAULT] 
 # nova-api 서버의 IP 주소
 nova_metadata_host = controller
