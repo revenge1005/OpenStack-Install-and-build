@@ -117,7 +117,7 @@ chgrp neutron /etc/neutron/neutron.conf
 #### (3) /etc/neutron/plugins/ml2/ml2_conf.ini 파일 수정
 
 ```
-vi /etc/neutron/metadata_agent.ini
+vi /etc/neutron/plugins/ml2/ml2_conf.ini
 ```
 ```bash
 [ml2]
