@@ -53,8 +53,6 @@ apt -y install nova-api nova-conductor nova-scheduler nova-novncproxy placement-
 #### (2) /etc/neutron/neutron.conf 파일 수정
 ```
 mv /etc/neutron/neutron.conf /etc/neutron/neutron.conf.bak
-
-vim /etc/neutron/neutron.conf
 ```
 ```bash
 cat <<EOF >/etc/neutron/neutron.conf
@@ -108,7 +106,7 @@ username = nova
 password = NOVA_DBPASS
 
 [oslo_concurrency]
-lock_path = $state_path/tmp
+lock_path = \$state_path/tmp
 ```
 ```
 chmod 640 /etc/neutron/neutron.conf
@@ -124,11 +122,14 @@ vi /etc/neutron/metadata_agent.ini
 [ml2]
 # Neutron, ml2 네트워크 드라이버가 지원하는 목록
 type_drivers = flat,vlan,gre,vxlan
+
 # tenant_network로 할당되는 네트워크 유형의 목록을 의미
 tenant_network_type = 
+
 # 대규모의 네트워크에서 트래픽을 보내기 위해 사용되는 드라이버
 # openvswitch, linuxbridge가 주로 사용되며, 여기서는 linuxbridge를 사용한다.
 mechanism_drivers = linuxbridge,openvswitch,l2population
+
 # ml2가 지원하는 확장 드라이버 가상머신에서 패킷 필터링 기능을 허용하기 위해 사용
 extension_drivers = port_security
 ```
@@ -168,4 +169,147 @@ su -s /bin/bash neutron -c "neutron-db-manage --config-file /etc/neutron/neutron
 
 systemctl restart neutron-server nova-api
 systemctl enable neutron-server 
+```
+
+<br>
+
+----
+
+## 2-1. Network 노드 - 커널 설정
+```
+sed -i 's/#net.ipv4.ip_forward=1/net.ipv4.ip_forward=1/' /etc/sysctl.conf
+sed -i 's/#net.ipv4.conf.default.rp_filter=1/net.ipv4.conf.default.rp_filter=0/' /etc/sysctl.conf
+sed -i 's/#net.ipv4.conf.all.rp_filter=1/net.ipv4.conf.all.rp_filter=0/' /etc/sysctl.conf
+
+sysctl -p
+```
+
+## 2-2. Network 노드 - Neutron 패키지 설치 및 설정
+
+#### (1) 설치
+#### - 메뉴얼 대로 하면, /etc/neutron/fwaas_driver.ini 파일이 없다면서 neutron-l3-agent가 실행되지 않는다.
+#### - 찾아보니 해당 파일은 Ubuntu 환경에서만 누락되어있는 것 같다. (https://github.com/cloudbase/salt-openstack/issues/23)
+#### - 해결 방법은 따로 설치하면 (apt -y install python3-neutron-fwaas) 된다. (아래 내용에 추가되어 있다.)
+```
+apt -y install neutron-plugin-ml2 neutron-linuxbridge-agent neutron-l3-agent neutron-dhcp-agent neutron-metadata-agent python3-neutronclient python3-neutron-fwaas
+```
+
+#### (2) /etc/neutron/neutron.conf 파일 수정
+```
+mv /etc/neutron/neutron.conf /etc/neutron/neutron.conf.org
+```
+```bash
+cat <<EOF >/etc/neutron/neutron.conf 
+[DEFAULT]
+core_plugin = ml2
+service_plugins = router
+auth_strategy = keystone
+state_path = /var/lib/neutron
+allow_overlapping_ips = True
+# RabbitMQ connection info
+transport_url = rabbit://openstack:RABBIT_PASS@controller
+
+[agent]
+root_helper = sudo /usr/bin/neutron-rootwrap /etc/neutron/rootwrap.conf
+
+# Keystone auth info
+[keystone_authtoken]
+www_authenticate_uri = http://controller:5000
+auth_url = http://controller:5000
+memcached_servers = controller:11211
+auth_type = password
+project_domain_name = default
+user_domain_name = default
+project_name = service
+username = neutron
+password = NEUTRON_DBPASS
+
+[oslo_concurrency]
+lock_path = \$state_path/tmp
+EOF
+```
+```
+chmod 640 /etc/neutron/neutron.conf
+chgrp neutron /etc/neutron/neutron.conf
+```
+
+#### (3) /etc/neutron/l3_agent.ini 파일 수정
+#### - L3 에이전트가 사용하는 파일, 셀프서비스 가상 네트워크에 라우팅과 NAT 서비스를 제공하는 역할을 함
+```
+vim /etc/neutron/l3_agent.ini
+```
+```
+#line16
+interface_driver = linuxbridge
+```
+
+#### (4) /etc/neutron/dhcp_agent.ini 파일 수정
+#### - DHCP 에이전트가 사용하는 파일, 가상 네트워크에 DHCP 서비스를 제공
+```
+[DEFAULT]
+# 가상 네트워크 인터페이스를 관리하기 위해 사용되는 드라이버 (openvswitch, linuxbridge)
+interface_driver = linuxbridge
+
+# DHCP 서버를 관리하기 위해 사용되는 드라이버 정의
+dhcp_driver = neutron.agent.linux.dhcp.Dnsmasq
+
+# 독립된 metadata 기능 사용함으로 프로바이더 네트워크에서 인스턴스가 네트워크를 통해 metadata를 접속할 수 있게 허용
+enable_isolated_metadata = true
+```
+
+#### (5) /etc/neutron/metadata_agent.ini 파일 수정
+#### - Metadata 에이전트가 사용하는 파일, 인증정보와 같은 설정정보를 인스턴스에게 제공
+```
+[DEFAULT] 
+# nova-api 서버의 IP 주소
+nova_metadata_host = controller
+
+# NOVA-METADATA 서버 비밀키 설정
+metadata_proxy_shared_secret = metadata_secret
+
+# uncomment and specify Memcache server
+memcache_servers = controller:11211
+```
+
+#### (6) /etc/neutron/plugins/ml2/ml2_conf.ini 파일 수정
+```
+vim /etc/neutron/plugins/ml2/ml2_conf.ini
+```
+```
+[ml2]
+# OK with no value for [tenant_network_types] now (set later if need)
+type_drivers = flat,vlan,gre,vxlan
+tenant_network_type = 
+mechanism_drivers = linuxbridge,openvswitch,l2population
+extension_drivers = port_security
+
+#enable_ipset = True
+```
+```
+ln -s /etc/neutron/plugins/ml2/ml2_conf.ini /etc/neutron/plugin.ini
+```
+
+#### (7) /etc/neutron/plugins/ml2/linuxbridge_agent.ini 파일 수정
+```
+vim /etc/neutron/plugins/ml2/linuxbridge_agent.ini
+```
+```
+[securitygroup]
+firewall_driver = neutron.agent.linux.iptables_firewall.IptablesFirewallDriver
+enable_security_group = True
+enable_ipset = True
+
+# line 284:
+local_ip = 192.168.219.130
+```
+
+#### (8) Neutron restart/enable
+```
+systemctl restart neutron-l3-agent neutron-dhcp-agent neutron-metadata-agent neutron-linuxbridge-agent
+systemctl enable neutron-l3-agent neutron-dhcp-agent neutron-metadata-agent neutron-linuxbridge-agent
+```
+
+#### (9) Controller 노드 - 결과 확인
+```
+openstack network agent list
 ```
