@@ -47,7 +47,7 @@ openstack endpoint list | grep neutron
 
 #### (1) 설치
 ```
-apt -y install nova-api nova-conductor nova-scheduler nova-novncproxy placement-api python3-novaclient
+apt -y install neutron-server neutron-metadata-agent neutron-plugin-ml2 python3-neutronclient 
 ```
 
 #### (2) /etc/neutron/neutron.conf 파일 수정
@@ -313,3 +313,7 @@ systemctl enable neutron-l3-agent neutron-dhcp-agent neutron-metadata-agent neut
 ```
 openstack network agent list
 ```
+
+<br>
+
+----
