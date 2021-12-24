@@ -324,3 +324,131 @@ openstack network agent list
 <br>
 
 ----
+
+## 3-1. Compute 노드 - 커널 설정
+```
+sed -i 's/#net.ipv4.conf.default.rp_filter=1/net.ipv4.conf.default.rp_filter=0/' /etc/sysctl.conf
+sed -i 's/#net.ipv4.conf.all.rp_filter=1/net.ipv4.conf.all.rp_filter=0/' /etc/sysctl.conf
+
+sysctl -p
+```
+
+## 3-2. Compute 노드 - Neutron 패키지 설치 및 설정
+
+#### (1) 설치
+```
+apt install neutron-common neutron-plugin-ml2 neutron-linuxbridge-agent nova-api-metadata python3-neutronclient -y
+```
+
+#### (2) /etc/neutron/neutron.conf 파일 수정
+```
+mv /etc/neutron/neutron.conf /etc/neutron/neutron.conf.org
+```
+```bash
+cat <<EOF >/etc/neutron/neutron.conf
+[DEFAULT]
+# ...
+core_plugin = ml2
+state_path = /var/lib/neutron
+service_plugins = 
+transport_url = rabbit://openstack:RABBIT_PASS@controller
+auth_strategy = keystone
+allow_overlapping_ips = True
+
+[agent]
+root_helper = sudo /usr/bin/neutron-rootwrap /etc/neutron/rootwrap.conf
+
+[keystone_authtoken]
+# ...
+www_authenticate_uri = http://controller:5000
+auth_url = http://controller:5000
+memcached_servers = controller:11211
+auth_type = password
+project_domain_name = default
+user_domain_name = default
+project_name = service
+username = neutron
+password = NEUTRON_PASS
+
+[oslo_concurrency]
+lock_path = $state_path/tmp
+EOF
+```
+```
+chmod 640 /etc/neutron/neutron.conf
+chgrp neutron /etc/neutron/neutron.conf
+```
+
+#### (3) /etc/neutron/plugins/ml2/ml2_conf.ini 파일 수정
+```
+vim /etc/neutron/plugins/ml2/ml2_conf.ini
+```
+```
+[ml2]
+type_drivers = flat,vlan,gre,vxlan
+tenant_network_types = 
+mechanism_drivers = linuxbridge,openvswitch,l2population
+extension_drivers = port_security
+
+[securitygroup]
+firewall_driver = neutron.agent.linux.iptables_firewall.IptablesFirewallDriver
+
+enable_security_group = True
+```
+```
+ln -s /etc/neutron/plugins/ml2/ml2_conf.ini /etc/neutron/plugin.ini
+```
+
+#### (4) /etc/nova/nova.conf 파일 수정
+
+```
+vim /etc/nova/nova.conf
+```
+```
+# add follows into [DEFAULT] section
+[DEFAULT]
+use_neutron = True
+linuxnet_interface_driver = nova.network.linux_net.LinuxBridgeInterfaceDriver
+firewall_driver = nova.virt.firewall.NoopFirewallDriver
+vif_plugging_is_fatal = True
+vif_plugging_timeout = 300
+
+# add follows to the end : Neutron auth info
+[neutron]
+auth_url = http://controller:5000
+auth_type = password
+project_domain_name = default
+user_domain_name = default
+region_name = RegionOne
+project_name = service
+username = neutron
+password = NEUTRON_PASS
+service_metadata_proxy = True
+metadata_proxy_shared_secret = metadata_secret
+```
+
+#### (5) /etc/neutron/plugins/ml2/linuxbridge_agent.ini 파일 수정
+```
+vim /etc/neutron/plugins/ml2/linuxbridge_agent.ini
+```
+```
+[securitygroup]
+firewall_driver = neutron.agent.linux.iptables_firewall.IptablesFirewallDriver
+enable_security_group = True
+enable_ipset = True
+
+# line 284: add own IP address
+local_ip = 192.168.219.120
+```
+
+#### (6) neutron restart/enable
+```
+systemctl restart nova-compute nova-api-metadata neutron-linuxbridge-agent
+systemctl enable nova-compute nova-api-metadata neutron-linuxbridge-agent
+```
+
+
+#### (7) controller 노드 - 결과 확인
+```
+openstack network agent list
+```
