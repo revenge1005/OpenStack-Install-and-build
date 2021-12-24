@@ -137,7 +137,9 @@ ln -s /etc/neutron/plugins/ml2/ml2_conf.ini /etc/neutron/plugin.ini
 ```
 
 #### (4) /etc/nova/nova.conf 파일 수정
-
+```
+vim /etc/nova/nova.conf
+```
 ```bash
 # add follows into [DEFAULT] section
 [DEFAULT]
