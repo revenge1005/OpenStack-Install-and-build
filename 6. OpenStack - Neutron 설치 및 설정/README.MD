@@ -320,6 +320,7 @@ systemctl enable neutron-l3-agent neutron-dhcp-agent neutron-metadata-agent neut
 ```
 openstack network agent list
 ```
+![01](https://user-images.githubusercontent.com/42735894/147350145-15cf47d6-36ad-497b-9870-ff7235a7dfb8.PNG)
 
 <br>
 
@@ -371,7 +372,7 @@ username = neutron
 password = NEUTRON_PASS
 
 [oslo_concurrency]
-lock_path = $state_path/tmp
+lock_path = \$state_path/tmp
 EOF
 ```
 ```
