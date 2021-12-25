@@ -24,13 +24,13 @@ openstack user create --domain default --project service --password CINDER_PASS 
 
 openstack role add --project service --user cinder admin
 
-openstack service create --name cinderv1 --description "OpenStack Block Storage" volumev1
+openstack service create --name cinder --description "OpenStack Block Storage" volume
 
-openstack endpoint create --region RegionOne volumev1 public http://controller:8776/v1/%\(project_id\)s
+openstack endpoint create --region RegionOne volume public http://controller:8776/v1/%\(project_id\)s
 
-openstack endpoint create --region RegionOne volumev1 internal http://controller:8776/v1/%\(project_id\)s
+openstack endpoint create --region RegionOne volume internal http://controller:8776/v1/%\(project_id\)s
 
-openstack endpoint create --region RegionOne volumev1 admin http://controller:8776/v1/%\(project_id\)s
+openstack endpoint create --region RegionOne volume admin http://controller:8776/v1/%\(project_id\)s
 
 openstack service create --name cinderv2 --description "OpenStack Block Storage" volumev2
 
