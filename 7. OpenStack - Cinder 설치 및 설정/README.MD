@@ -24,14 +24,6 @@ openstack user create --domain default --project service --password CINDER_PASS 
 
 openstack role add --project service --user cinder admin
 
-openstack service create --name cinder --description "OpenStack Block Storage" volume
-
-openstack endpoint create --region RegionOne volume public http://controller:8776/v1/%\(project_id\)s
-
-openstack endpoint create --region RegionOne volume internal http://controller:8776/v1/%\(project_id\)s
-
-openstack endpoint create --region RegionOne volume admin http://controller:8776/v1/%\(project_id\)s
-
 openstack service create --name cinderv2 --description "OpenStack Block Storage" volumev2
 
 openstack endpoint create --region RegionOne volumev2 public http://controller:8776/v2/%\(project_id\)s
@@ -39,6 +31,14 @@ openstack endpoint create --region RegionOne volumev2 public http://controller:8
 openstack endpoint create --region RegionOne volumev2 internal http://controller:8776/v2/%\(project_id\)s
 
 openstack endpoint create --region RegionOne volumev2 admin http://controller:8776/v2/%\(project_id\)s
+
+openstack service create --name cinderv3 --description "OpenStack Block Storage" volumev3
+
+openstack endpoint create --region RegionOne volumev3 public http://controller:8776/v3/%\(project_id\)s
+
+openstack endpoint create --region RegionOne volumev3 internal http://controller:8776/v3/%\(project_id\)s
+
+openstack endpoint create --region RegionOne volumev3 admin http://controller:8776/v3/%\(project_id\)s
 ```
 
 #### (3) 결과 확인
@@ -72,6 +72,7 @@ my_ip = 192.168.56.110
 transport_url = rabbit://openstack:RABBIT_PASS@controller
 endpoint_v1_api = True
 endpoint_v2_api = True
+enable_v3_api = True
 
 # MariaDB connection info
 [database]
