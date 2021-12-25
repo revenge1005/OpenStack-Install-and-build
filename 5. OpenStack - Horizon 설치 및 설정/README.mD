@@ -35,12 +35,14 @@ TIME_ZONE = "Asia/Seoul"
 
 ### add to the end
 
+# Openstack api version 명시
 OPENSTACK_API_VERSIONS = {
     "identity": 3,
     "image": 2,
     "volume": 3,
 }
 
+# 
 OPENSTACK_NEUTRON_NETWORK = {
     'enable_router': False,
     'enable_quotas': False,
@@ -55,7 +57,6 @@ OPENSTACK_NEUTRON_NETWORK = {
 
 ### keystone Multidomain 지원 설정
 OPENSTACK_KEYSTONE_MULTIDOMAIN_SUPPORT = True
-
 
 ### 기본 설정으로 사용할 도메인 설정(대시보드를 통해 사용자 생성 시 기본값으로 사용됨)
 OPENSTACK_KEYSTONE_DEFAULT_DOMAIN = 'Default'

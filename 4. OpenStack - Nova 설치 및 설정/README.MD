@@ -87,13 +87,14 @@ apt -y install nova-api nova-conductor nova-scheduler nova-novncproxy placement-
 ```
 mv /etc/nova/nova.conf /etc/nova/nova.conf.org
 ```
-```
+```bash
 cat <<EOF >/etc/nova/nova.conf
 # create new
 [DEFAULT]
 state_path = /var/lib/nova
-enabled_apis = osapi_compute,metadata
 log_dir = /var/log/nova
+# 사용 가능한 API로서 compute와 metadata API만 사용
+enabled_apis = osapi_compute,metadata
 # IP address
 my_ip = 192.168.56.110
 # RabbitMQ connection info
@@ -121,6 +122,7 @@ project_name = service
 username = nova
 password = NOVA_PASS
 
+# 관리자에게 인스턴스로의 원격 데스크톱 접속을 허용하는 서비스, 6080 Port 사용
 [vnc]
 enabled = true
 server_listen = \$my_ip
@@ -130,9 +132,11 @@ server_proxyclient_address = \$my_ip
 [glance]
 api_servers = http://controller:9292
 
+# 파일 잠금을 위해 사용되는 디렉토리
 [oslo_concurrency]
 lock_path = \$state_path/tmp
 
+# placement auth info
 [placement]
 region_name = RegionOne
 project_domain_name = default
