@@ -143,8 +143,6 @@ endpoint_v1_api = True
 endpoint_v2_api = True
 # RabbitMQ connection info
 transport_url = rabbit://openstack:password@controller
-# Glance connection info
-glance_api_servers = http://controller:9292
 # OK with empty value now
 enabled_backends = lvm
 
@@ -170,7 +168,7 @@ EOF
 ```
 ```
 chmod 644 /etc/cinder/cinder.conf
-chgrp cinder /etc/cinder/cinder.conf
+chown cinder.cinder /etc/cinder/cinder.conf
 ```
 
 #### (3) Cinder 서비스 restart/enable
