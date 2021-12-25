@@ -2,6 +2,7 @@
 
 #### - https://docs.openstack.org/nova/ussuri/install/controller-install-ubuntu.html#prerequisites
 
+#### (1) Nova/Placement DB 생성
 ```
 mysql -u root -p
 ```
@@ -35,11 +36,9 @@ flush privileges;
 exit
 ```
 
-## 1-2. Controller 노드 - Nova 사용자, 서비스, EndPoint 생성
-
-#### (1) 생성
+#### (2) Nova/Placement 사용자, 서비스, EndPoint 생성
 ```
-openstack user create --domain default --project service --password NOVA_DBPASS nova
+openstack user create --domain default --project service --password NOVA_PASS nova
 
 openstack role add --project service --user nova admin
 
@@ -52,7 +51,7 @@ openstack endpoint create --region RegionOne compute internal http://controller:
 openstack endpoint create --region RegionOne compute admin http://controller:8774/v2.1/%\(tenant_id\)s
 ```
 ```
-openstack user create --domain default --project service --password PLACEMENT_DBPASS placement
+openstack user create --domain default --project service --password PLACEMENT_PASS placement
 
 openstack role add --project service --user placement admin
 
@@ -65,7 +64,7 @@ openstack endpoint create --region RegionOne placement internal http://controlle
 openstack endpoint create --region RegionOne placement admin http://controller:8778
 ```
 
-#### (2) 확인
+#### (3) 결과 확인
 ```
 openstack user list
 
@@ -76,7 +75,7 @@ openstack endpoint list | grep nova
 openstack endpoint list | grep placement
 ```
 
-## 1-3. Controller 노드 - Nova 패키지 설치 및 설정
+## 1-2. Controller 노드 - Nova 패키지 설치 및 설정
 
 #### (1) 설치
 ```
@@ -185,7 +184,7 @@ chmod 640 /etc/placement/placement.conf
 chgrp placement /etc/placement/placement.conf
 ```
 
-## 1-4. 데이터베이스 테이블 생성
+## 1-3. 데이터베이스 테이블 생성
 ```
 su -s /bin/bash placement -c "placement-manage db sync"
 
@@ -198,7 +197,7 @@ su -s /bin/bash nova -c "nova-manage db sync"
 su -s /bin/bash nova -c "nova-manage cell_v2 create_cell --name cell1"
 ```
 
-## 1-5. 서비스 restart/enable
+## 1-4. 서비스 restart/enable
 ```
 systemctl restart nova-api nova-scheduler nova-conductor nova-novncproxy apache2
 

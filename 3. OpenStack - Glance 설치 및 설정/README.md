@@ -3,6 +3,8 @@
 #### - https://docs.openstack.org/glance/ussuri/install/install-ubuntu.html#install-and-configure-components
 
 #### - Glance의 설치 및 설정은 "Controller Node"에서만 작업한다.
+
+#### (1) Glance DB 생성 
 ```
 mysql -u root -p
 ```
@@ -18,11 +20,9 @@ flush privileges;
 exit
 ```
 
-## 1-2. Glance 사용자, 서비스, EndPoint 생성
-
-#### (1) 생성
+#### (2) Glance 사용자, 서비스, EndPoint 생성
 ```
-openstack user create --domain default --project service --password GLANCE_DBPASS glance
+openstack user create --domain default --project service --password GLANCE_PASS glance
 
 openstack role add --project service --user glance admin
 
@@ -35,7 +35,7 @@ openstack endpoint create --region RegionOne image internal http://controller:92
 openstack endpoint create --region RegionOne image admin http://controller:9292
 ```
 
-#### (2) 확인
+#### (3) 결과 확인
 ```
 openstack user list
 
@@ -44,7 +44,7 @@ openstack service list
 openstack endpoint list
 ```
 
-## 1-3. Glance 패키지 설치 및 설정
+## 1-2. Glance 패키지 설치 및 설정
 
 #### (1) 설치
 ```
@@ -125,7 +125,7 @@ systemctl enable glance-api.service
 ls -l /var/log/glance
 ```
 
-## 1-4. Glance 서비스 테스트
+## 1-3. Glance 서비스 테스트
 
 #### (1) Cirros의 이미지를 다운
 ```

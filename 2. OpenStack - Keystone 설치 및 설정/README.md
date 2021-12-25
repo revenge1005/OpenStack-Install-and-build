@@ -4,10 +4,11 @@
 
 #### - Keystone의 설치 및 설정은 "Controller Node"에서만 작업한다.
 
+#### (1) keyston DB 생성
+
 ```bash
 mysql -u root -p
 ```
-
 ```
 create database keystone default character set utf8 default collate utf8_general_ci;
 

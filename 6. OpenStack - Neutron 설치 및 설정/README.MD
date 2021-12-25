@@ -2,6 +2,7 @@
 
 #### - https://docs.openstack.org/neutron/ussuri/install/controller-install-ubuntu.html#configure-networking-options
 
+#### (1) Neutron DB 생성
 ```
 mysql -u root -p
 ```
@@ -17,11 +18,9 @@ flush privileges;
 exit
 ```
 
-## 1-2. Controller 노드 - Nova 사용자, 서비스, EndPoint 생성
-
-#### (1) 생성
+#### (2) Neutron 사용자, 서비스, EndPoint 생성
 ```
-openstack user create --domain default --project service --password NEUTRON_DBPASS neutron
+openstack user create --domain default --project service --password NEUTRON_PASS neutron
 
 openstack role add --project service --user neutron admin
 
@@ -34,7 +33,7 @@ openstack endpoint create --region RegionOne network internal http://controller:
 openstack endpoint create --region RegionOne network admin http://controller:9696
 ```
 
-#### (2) 확인
+#### (3) 결과 확인
 ```
 openstack user list
 
@@ -43,7 +42,7 @@ openstack service list
 openstack endpoint list | grep neutron
 ```
 
-## 1-3. Controller 노드 - Neutron 패키지 설치 및 설정
+## 1-2. Controller 노드 - Neutron 패키지 설치 및 설정
 
 #### (1) 설치
 ```
