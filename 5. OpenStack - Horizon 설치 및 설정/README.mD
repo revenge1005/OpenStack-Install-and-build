@@ -42,18 +42,20 @@ OPENSTACK_API_VERSIONS = {
     "volume": 3,
 }
 
-# 
-OPENSTACK_NEUTRON_NETWORK = {
-    'enable_router': False,
-    'enable_quotas': False,
-    'enable_ipv6': False,
-    'enable_distributed_router': False,
-    'enable_ha_router': False,
-    'enable_lb': False,
-    'enable_firewall': False,
-    'enable_vpn': False,
-    'enable_fip_topology_check': False,
-}
+# 네트워킹을 옵션 1로 설정한 경우 3계층 서비스들에 대해 비활성화
+# Option 1: https://docs.openstack.org/neutron/ussuri/install/controller-install-option1-ubuntu.html
+# Option 2: https://docs.openstack.org/neutron/ussuri/install/controller-install-option2-ubuntu.html
+#OPENSTACK_NEUTRON_NETWORK = {
+#    'enable_router': False,
+#    'enable_quotas': False,
+#    'enable_ipv6': False,
+#    'enable_distributed_router': False,
+#    'enable_ha_router': False,
+#    'enable_lb': False,
+#    'enable_firewall': False,
+#    'enable_vpn': False,
+#    'enable_fip_topology_check': False,
+#}
 
 ### keystone Multidomain 지원 설정
 OPENSTACK_KEYSTONE_MULTIDOMAIN_SUPPORT = True
