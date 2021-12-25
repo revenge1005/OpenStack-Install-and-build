@@ -329,3 +329,5 @@ openstack compute service list
 
 openstack hypervisor list
 ```
+![01](https://user-images.githubusercontent.com/42735894/147385846-61ca7678-8977-4666-9485-8cb39ad21a54.PNG)
+![02](https://user-images.githubusercontent.com/42735894/147385848-01e65749-45e8-4159-849c-babf43f2dbfd.PNG)
