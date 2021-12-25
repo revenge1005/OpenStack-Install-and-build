@@ -184,7 +184,7 @@ chmod 640 /etc/placement/placement.conf
 chgrp placement /etc/placement/placement.conf
 ```
 
-## 1-3. 데이터베이스 테이블 생성
+## 1-3. Nova DB - Table 생성
 ```
 su -s /bin/bash placement -c "placement-manage db sync"
 
@@ -197,7 +197,7 @@ su -s /bin/bash nova -c "nova-manage db sync"
 su -s /bin/bash nova -c "nova-manage cell_v2 create_cell --name cell1"
 ```
 
-## 1-4. 서비스 restart/enable
+## 1-4. Nova 서비스 restart/enable
 ```
 systemctl restart nova-api nova-scheduler nova-conductor nova-novncproxy apache2
 
@@ -308,7 +308,7 @@ lsmod | grep vhost
 ```
 echo vhost_net >> /etc/modules
 ```
-#### (5) 서비스를 restart/enable
+#### (5) Nova 서비스를 restart/enable
 ```
 systemctl restart nova-compute
 

@@ -162,11 +162,15 @@ service_metadata_proxy = True
 metadata_proxy_shared_secret = metadata_secret
 ```
 
-#### (5) 데이터베이스 테이블 추가 및 Neutron 재시작
+#### (5) Neutron DB - Table 생성 
 
 ```
 su -s /bin/bash neutron -c "neutron-db-manage --config-file /etc/neutron/neutron.conf --config-file /etc/neutron/plugin.ini upgrade head"
+```
 
+#### (6) Neutron 서비스 restart/enable
+
+```
 systemctl restart neutron-server nova-api
 systemctl enable neutron-server 
 ```

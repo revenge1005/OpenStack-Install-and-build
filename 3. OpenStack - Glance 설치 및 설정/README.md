@@ -100,7 +100,7 @@ chmod 640 /etc/glance/glance-api.conf
 chown root:glance /etc/glance/glance-api.conf
 ```
 
-#### (3) glance-manage db_sync [DB이름] 명령을 통해 image service 데이터베이스 초기 구성
+#### (3) Glance DB - Table 생성
 ```
 su -s /bin/bash glance -c "glance-manage db_sync"
 ```
@@ -113,7 +113,7 @@ mysql -u root -p glance
 show tables;
 ```
 
-#### (4) 서비스 restart/enable
+#### (4) Glance 서비스 restart/enable
 ```
 systemctl restart glance-api.service
 
