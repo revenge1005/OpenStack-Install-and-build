@@ -87,7 +87,7 @@ project_domain_name = default
 user_domain_name = default
 project_name = service
 username = neutron
-password = NEUTRON_DBPASS
+password = NEUTRON_PASS
 
 # MariaDB connection info
 [database]
@@ -103,7 +103,7 @@ user_domain_name = default
 region_name = RegionOne
 project_name = service
 username = nova
-password = NOVA_DBPASS
+password = NOVA_PASS
 
 [oslo_concurrency]
 lock_path = \$state_path/tmp
@@ -158,7 +158,7 @@ user_domain_name = default
 region_name = RegionOne
 project_name = service
 username = neutron
-password = NEUTRON_DBPASS
+password = NEUTRON_PASS
 service_metadata_proxy = True
 metadata_proxy_shared_secret = metadata_secret
 ```
@@ -223,7 +223,7 @@ project_domain_name = default
 user_domain_name = default
 project_name = service
 username = neutron
-password = NEUTRON_DBPASS
+password = NEUTRON_PASS
 
 [oslo_concurrency]
 lock_path = \$state_path/tmp
@@ -289,8 +289,6 @@ type_drivers = flat,vlan,gre,vxlan
 tenant_network_types = 
 mechanism_drivers = linuxbridge,openvswitch,l2population
 extension_drivers = port_security
-
-#enable_ipset = True
 ```
 ```
 ln -s /etc/neutron/plugins/ml2/ml2_conf.ini /etc/neutron/plugin.ini
@@ -405,7 +403,7 @@ ln -s /etc/neutron/plugins/ml2/ml2_conf.ini /etc/neutron/plugin.ini
 ```
 vim /etc/nova/nova.conf
 ```
-```
+```bash
 # add follows into [DEFAULT] section
 [DEFAULT]
 use_neutron = True
