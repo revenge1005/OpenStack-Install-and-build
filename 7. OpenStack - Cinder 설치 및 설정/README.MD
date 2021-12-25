@@ -5,7 +5,8 @@
 #### (1) Cinder DB 생성
 ```
 mysql -u root -p
-
+```
+```
 CREATE DATABASE cinder;
 
 GRANT ALL PRIVILEGES ON cinder.* TO 'cinder'@'localhost' IDENTIFIED BY 'CINDER_DBPASS';
