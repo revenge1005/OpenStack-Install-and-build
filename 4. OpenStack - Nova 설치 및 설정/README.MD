@@ -83,7 +83,7 @@ openstack endpoint list | grep placement
 apt -y install nova-api nova-conductor nova-scheduler nova-novncproxy placement-api python3-novaclient
 ```
 
-#### (2) 설정 - 1
+#### (2) /etc/nova/nova.conf 파일 수정
 ```
 mv /etc/nova/nova.conf /etc/nova/nova.conf.org
 ```
@@ -156,7 +156,7 @@ chmod 640 /etc/nova/nova.conf
 chgrp nova /etc/nova/nova.conf
 ```
 
-#### (3) 설정 - 2
+#### (3) /etc/placement/placement.conf 파일 수정
 ```
 mv /etc/placement/placement.conf /etc/placement/placement.conf.org
 ```
@@ -220,11 +220,11 @@ openstack compute service list
 apt install qemu-kvm libvirt-daemon-system libvirt-clients virtinst bridge-utils nova-compute-kvm python3-openstackclient nova-api-metadata nova-compute python3-novaclient -y
 ```
 
-#### (2) 설정 
+#### (2) /etc/nova/nova.conf 파일 수정
 ```bash
 mv /etc/nova/nova.conf /etc/nova/nova.conf.bak
 ```
-```
+```bash
 cat <<EOF >/etc/nova/nova.conf
 [DEFAULT]
 state_path = /var/lib/nova

@@ -9,10 +9,11 @@
 apt install openstack-dashboard -y
 ```
 
-#### (2) 설정
+#### (2) /etc/openstack-dashboard/local_settings.py 파일 수정
 ```bash
 vim /etc/openstack-dashboard/local_settings.py
-
+```
+```bash
 CACHES = {
     'default': {
          'BACKEND': 'django.core.cache.backends.memcached.MemcachedCache',
@@ -75,7 +76,7 @@ systemctl restart apache2
 
 #### (5) 결과 확인
 
-#### - [admin 사용자의 ID, Password는 Keystone bootstrap에서 설정했다](https://github.com/revenge1005/OpenStack-Install-and-build/tree/main/2.%20OpenStack%20-%20Keystone%20%EC%84%A4%EC%B9%98%20%EB%B0%8F%20%EC%84%A4%EC%A0%95#1-4-%ED%99%98%EA%B2%BD-%EB%B3%80%EC%88%98-%EC%84%A4%EC%A0%95)
+#### - [admin 사용자의 ID, Password는 Keystone bootstrap에서 설정했었다.](https://github.com/revenge1005/OpenStack-Install-and-build/tree/main/2.%20OpenStack%20-%20Keystone%20%EC%84%A4%EC%B9%98%20%EB%B0%8F%20%EC%84%A4%EC%A0%95#1-4-%ED%99%98%EA%B2%BD-%EB%B3%80%EC%88%98-%EC%84%A4%EC%A0%95)
 
 ![1](https://user-images.githubusercontent.com/42735894/147240804-d558d1cb-ac3d-47a4-b9b0-2ef4956be77d.PNG)
 ![2](https://user-images.githubusercontent.com/42735894/147240813-b0a2fc30-a28d-420e-81a5-2872158655cb.PNG)

@@ -51,7 +51,7 @@ openstack endpoint list
 apt install glance -y
 ```
 
-#### (2) 설정 
+#### (2) /etc/glance/glance-api.conf 파일 수정
 ```bash
 mv /etc/glance/glance-api.conf /etc/glance/glance-api.conf.bak
 ```
