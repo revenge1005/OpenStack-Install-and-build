@@ -168,7 +168,7 @@ username = cinder
 password = CINDER_PASS
 
 [oslo_concurrency]
-lock_path = $state_path/tmp
+lock_path = \$state_path/tmp
 EOF
 ```
 ```
