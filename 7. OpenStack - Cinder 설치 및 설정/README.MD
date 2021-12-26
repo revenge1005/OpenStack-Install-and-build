@@ -123,6 +123,8 @@ source ~/keystonerc
 openstack volume service list
 ```
 
+![01](https://user-images.githubusercontent.com/42735894/147405683-25df402f-21b2-466a-b42b-b4a0aa40120c.PNG)
+
 <br>
 
 ----
@@ -187,3 +189,5 @@ systemctl enable cinder-volume
 ```
 openstack volume service list
 ```
+
+![02](https://user-images.githubusercontent.com/42735894/147405684-8e22a993-d993-4509-a85a-c64c7439e540.PNG)
