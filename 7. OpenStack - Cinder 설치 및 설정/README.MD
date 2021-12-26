@@ -148,7 +148,7 @@ auth_strategy = keystone
 endpoint_v1_api = True
 endpoint_v2_api = True
 # RabbitMQ connection info
-transport_url = rabbit://openstack:password@controller
+transport_url = rabbit://openstack:RABBIT_PASS@controller
 # OK with empty value now
 enabled_backends = lvm
 
